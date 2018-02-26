@@ -1,6 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
+Created on Sun Feb 25 23:54:17 2018
+
+@author: yixiao
+"""
+
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
 #--------------------------------------------------------------------
 # M6 - Video Analysis: Video Surveillance for Road Traffic Monitoring
 # Team06: YI XIAO, Juan Felipe Montesinos,Ferran Carrasquer
@@ -12,10 +20,10 @@
 """
 import os
 import numpy as np
-from sklearn.metrics import precision_recall_curve as PRC
 from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
 from PIL import Image
-
+import matplotlib.pyplot as plt
+from sklearn.metrics import f1_score
 
 # Input the folder path of the results and groundtruth, this function will output the precision, recall, f1_score for all the frames
 def evaluateAllFrames(folder_path, gt_path):
@@ -35,29 +43,12 @@ def evaluateAllFrames(folder_path, gt_path):
                 print('The image size of image and ground-truth is not corresponding!')
     else:
         print('The number of images are not corresponding!')
-
     trueArray = np.asarray(trueVector)
     predArray = np.asarray(predVector)
-    TP=0
-    TN=0
-    FP=0
-    FN=0
-    for j in range(len(trueArray)):
-        # True Positive (TP): we predict a label of 255 is positive, and the gt is 255.
-        if (trueArray[j] == predArray[j] == 255):
-            TP = TP+1
-        # True Negative (TN): we predict a label of 0 is negative, and the gt is 0.
-        if (trueArray[j] in [0,50,85,170]) and (predArray[j] == 0):
-            TN = TN+1
-        # False Positive (FP): we predict a label of 255 is positive, but the gt is 0.
-        if (trueArray[j] in [0,50,85,170]) and (predArray[j] == 255):
-            FP = FP+1
-        # False Negative (FN): we predict a label of 0 is negative, but the gt is 255.
-        if (trueArray[j] == 255) and (predArray[j] == 0):
-            FN = FN+1
-    precision = float(TP)/(TP+FP)
-    recall = float(TP)/(TP+FN)
-    f1_score = 2*precision*recall/(precision+recall)
+    for i in range(len(trueArray)):
+        if trueArray[i] in [50,85,170]:
+            trueArray[i] = 0
+    precision, recall,f1_score,support = PRFmetrics(trueArray,predArray,average='weighted')
     return precision, recall, f1_score
 
 
@@ -82,23 +73,42 @@ def evaluateOneFrame(frame,gt):
         if (trueArray[j] == predArray[j] == 255):
             TP = TP+1
         # True Negative (TN): we predict a label of 0 is negative, and the gt is 0.
-        elif (trueArray[j] in [0,50,85,170]) and (predArray[j] == 0):
+        if (trueArray[j] in [0,50,85,170]) and (predArray[j] == 0):
             TN = TN+1
         # False Positive (FP): we predict a label of 255 is positive, but the gt is 0.
-        elif (trueArray[j] in [0,50,85,170]) and (predArray[j] == 255):
+        if (trueArray[j] in [0,50,85,170]) and (predArray[j] == 255):
             FP = FP+1
         # False Negative (FN): we predict a label of 0 is negative, but the gt is 255.
-        elif (trueArray[j] == 255) and (predArray[j] == 0):
-            FN = FN+1
-            
-    if TP!=0 and (TP+FP)!=0 and (TP+FN)!=0:
-        precision_one=float(TP)/(TP+FP)
-        recall_one=float(TP)/(TP+FN)
-        f1_score_one=2*precision_one*recall_one/(precision_one+recall_one)
-    else:
-        f1_score_one=0.0
-    
+        if (trueArray[j] == 255) and (predArray[j] == 0):
+            FN = FN+1       
+    for i in range(len(trueArray)):
+        if trueArray[i] in [50,85,170]:
+            trueArray[i] = 0
+    f1_score_one = f1_score(trueArray, predArray,average='weighted')   
     return TP, FN, f1_score_one
+
+def temproalTP(folder_path,gt_path):
+    TF_list = []
+    TP_list = []
+    for i in range(len(os.listdir(folder_path))):
+        frame = np.asarray(Image.open(os.path.join(folder_path, os.listdir(folder_path)[i])))
+        frame = frame*255
+        gtImage = np.asarray(Image.open(os.path.join(gt_path, os.listdir(gt_path)[i])))
+        TP, FN, f1_score_frame = evaluateOneFrame(frame, gtImage)
+        TotalForeground = TP + FN
+        TP_list.append(TP)
+        TF_list.append(TotalForeground)
+        plt.plot(np.arange(len(TP_list)),TP_list,)
+        plt.plot(np.arange(len(TF_list)),TF_list)
+        plt.show()
             
-    
-    
+def temproalFscore(folder_path,gt_path):
+    f1score_list = []
+    for i in range(len(os.listdir(folder_path))):
+        frame = np.asarray(Image.open(os.path.join(folder_path, os.listdir(folder_path)[i])))
+        frame = frame*255
+        gtImage = np.asarray(Image.open(os.path.join(gt_path, os.listdir(gt_path)[i])))
+        _, _, f1_score_frame = evaluateOneFrame(frame, gtImage)
+        f1score_list.append(f1_score_frame)
+        plt.plot(np.arange(len(f1score_list)),f1score_list)
+        plt.show()
