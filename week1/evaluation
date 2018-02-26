@@ -98,9 +98,9 @@ def temproalTP(folder_path,gt_path):
         TotalForeground = TP + FN
         TP_list.append(TP)
         TF_list.append(TotalForeground)
-        plt.plot(np.arange(len(TP_list)),TP_list,)
-        plt.plot(np.arange(len(TF_list)),TF_list)
-        plt.show()
+    plt.plot(np.arange(len(TP_list)),TP_list,)
+    plt.plot(np.arange(len(TF_list)),TF_list)
+    plt.show()
             
 def temproalFscore(folder_path,gt_path):
     f1score_list = []
@@ -110,5 +110,5 @@ def temproalFscore(folder_path,gt_path):
         gtImage = np.asarray(Image.open(os.path.join(gt_path, os.listdir(gt_path)[i])))
         _, _, f1_score_frame = evaluateOneFrame(frame, gtImage)
         f1score_list.append(f1_score_frame)
-        plt.plot(np.arange(len(f1score_list)),f1score_list)
-        plt.show()
+    plt.plot(np.arange(len(f1score_list)),f1score_list)
+    plt.show()
