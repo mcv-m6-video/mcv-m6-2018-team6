@@ -21,7 +21,6 @@ Created on Sun Feb 25 23:54:17 2018
 import os
 import numpy as np
 from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
-from PIL import Image
 import matplotlib.pyplot as plt
 import cv2
 import glob
@@ -59,10 +58,12 @@ def evaluateAllFrames(folder_path, gt_path):
 def evaluateOneFrame(frame,gt):
     predVector = []
     trueVector = []
-    for p in range(0,frame.size):
-        predVector.append(frame.flat[p])
-    for p in range(0,gt.size):
-        trueVector.append(gt.flat[p])
+    for ridx in range(frame.shape[0]):
+        for cidx in range(frame.shape[1]):
+            predVector.append(frame[ridx,cidx])
+    for ridx in range(gt.shape[0]):
+        for cidx in range(gt.shape[1]):
+            trueVector.append(gt[ridx,cidx])
     trueArray = np.asarray(trueVector)
     predArray = np.asarray(predVector)     
     for i in range(len(trueArray)):
@@ -90,47 +91,38 @@ def evaluateOneFrame(frame,gt):
         if trueArray[j] == 1 and predArray[j] == 0:
             FN = FN+1      
     return TP, FN, f1_score_one
-
+            
 # This function is for evaluating the True Positive along time
 def temproalTP(folder_path,gt_path):
     TF_list = []
     TP_list = []
-    fileList = []
-    gtList = []
     for filename in sorted(glob.glob(os.path.join(folder_path, 'test_*_00*.png'))):
-        fileList.append(filename)
-    for gtname in sorted(glob.glob(os.path.join(gt_path, 'gt00*.png'))):
-        gtList.append(gtList)
-    fileArray = np.asarray(fileList)
-    gtArray = np.asarray(gtList) 
-    for i in range(len(fileArray)):
-        frame = cv2.imread(fileArray[i],0)
-        gtImage = cv2.imread(gtArray[i],0)
+        frame = cv2.imread(filename,0)
+        num = str(filename[-8:-4])
+        gtpath=os.path.join(gt_path, 'gt00'+num+'.png')
+        gtImage = cv2.imread(gtpath,0)
         TP, FN, f1_score_frame = evaluateOneFrame(frame, gtImage)
         TotalForeground = TP + FN
         TP_list.append(TP)
         TF_list.append(TotalForeground)
-    plt.plot(np.arange(len(TP_list)),TP_list,)
-    plt.plot(np.arange(len(TF_list)),TF_list)
+    plt.plot(np.arange(len(TP_list)),TP_list,'b',label='Ture Positive')
+    plt.plot(np.arange(len(TF_list)),TF_list,'c',label = 'Total Background')
+    plt.xlabel("Frames")
+    plt.ylabel("Number of pixels")
     plt.show()
-       
 
 # This function is for evaluating the F1-score along time
 def temproalFscore(folder_path,gt_path):
     f1score_list = []
-    fileList = []
-    gtList = []
     for filename in sorted(glob.glob(os.path.join(folder_path, 'test_*_00*.png'))):
-        fileList.append(filename)
-    for gtname in sorted(glob.glob(os.path.join(gt_path, 'gt00*.png'))):
-        gtList.append(gtList)
-    fileArray = np.asarray(fileList)
-    gtArray = np.asarray(gtList) 
-    for i in range(len(fileArray)):
-        frame = cv2.imread(fileArray[i],0)
-        gtImage = cv2.imread(gtArray[i],0)
+        frame = cv2.imread(filename,0)
+        num = str(filename[-8:-4])
+        gtpath=os.path.join(gt_path, 'gt'+num+'.png')
+        gtImage = cv2.imread(gtpath,0)
         _, _, f1_score_frame = evaluateOneFrame(frame, gtImage)
         f1score_list.append(f1_score_frame)
     plt.ylim(0.00,1.00)
-    plt.plot(np.arange(len(f1score_list)),f1score_list)
+    plt.plot(np.arange(len(f1score_list)),f1score_list,'b',label = 'f1-score')
+    plt.xlabel("Frames")
+    plt.ylabel("precentage")
     plt.show()
