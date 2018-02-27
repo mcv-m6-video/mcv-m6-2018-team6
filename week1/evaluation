@@ -184,3 +184,32 @@ def histSquareError(data):
     for c, p in zip(col, patches):
         plt.setp(p, 'facecolor', cm(c))
     plt.show()
+
+
+def visulizeError(OFtest,OFgt):
+    errorMap=np.zeros((OFtest.shape[0],OFtest.shape[1]))
+    u_test_=np.zeros((OFtest.shape[0],OFtest.shape[1]))
+    v_test_=np.zeros((OFtest.shape[0],OFtest.shape[1]))
+    u_gt_=np.zeros((OFtest.shape[0],OFtest.shape[1]))
+    v_gt_=np.zeros((OFtest.shape[0],OFtest.shape[1]))
+    u_test=OFtest[:,:,1]
+    v_test=OFtest[:,:,2]
+    u_gt=OFgt[:,:,1]
+    v_gt=OFgt[:,:,2]
+    valid_gt=OFgt[:,:,0]
+    for ridx in range(OFtest.shape[0]):
+        for cidx in range(OFtest.shape[1]):
+            u_test_ [ridx,cidx]=((float)(u_test [ridx,cidx])-math.pow(2,15))/64.0
+            v_test_ [ridx,cidx]=((float)(v_test [ridx,cidx])-math.pow(2,15))/64.0
+            u_gt_ [ridx,cidx]=((float)(u_gt [ridx,cidx])-math.pow(2,15))/64.0
+            v_gt_ [ridx,cidx]=((float)(v_gt [ridx,cidx])-math.pow(2,15))/64.0
+    for ri in range(valid_gt.shape[0]):
+        for ci in range(valid_gt.shape[1]):
+            if valid_gt [ri,ci] == 1:
+                SquareError = math.sqrt(math.pow((u_gt_ [ri,ci]-u_test_ [ri,ci]),2)+math.pow((v_gt_ [ri,ci]-v_test_ [ri,ci]),2))
+                errorMap[ri,ci]=SquareError
+#            else:
+#                errorMap [ri,ci]= original [ri,ci]
+    plt.imshow(errorMap);
+    plt.colorbar()
+    plt.show()
