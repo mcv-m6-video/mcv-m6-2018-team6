@@ -23,34 +23,36 @@ import numpy as np
 from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
 from PIL import Image
 import matplotlib.pyplot as plt
-from sklearn.metrics import f1_score
+import cv2
+import glob
 
 # Input the folder path of the results and groundtruth, this function will output the precision, recall, f1_score for all the frames
 def evaluateAllFrames(folder_path, gt_path):
     predVector = []
     trueVector = []
     if len(os.listdir(folder_path))==len(os.listdir(gt_path)):
-        for i in range(len(os.listdir(folder_path))):
-            image = np.asarray(Image.open(os.path.join(folder_path, os.listdir(folder_path)[i])))
-            image = image*255
-            gtImage = np.asarray(Image.open(os.path.join(gt_path, os.listdir(gt_path)[i])))
-            if gtImage.size == image.size:
-                for ridx in range(image.shape[0]):
-                    for cidx in range(image.shape[1]):
-                        predVector.append(image[ridx,cidx])
-                        trueVector.append(gtImage[ridx,cidx])
-            else:
-                print('The image size of image and ground-truth is not corresponding!')
+        for filename in sorted(glob.glob(os.path.join(folder_path, 'test_*_00*.png'))):
+            image = cv2.imread(filename,0)
+            for ridx in range(image.shape[0]):
+                for cidx in range(image.shape[1]):
+                    predVector.append(image[ridx,cidx])
+        for filename in sorted(glob.glob(os.path.join(gt_path, 'gt00*.png'))):
+            gtImage = cv2.imread(filename,0)
+            for ridx in range(gtImage.shape[0]):
+                for cidx in range(gtImage.shape[1]):
+                    trueVector.append(gtImage[ridx,cidx])
     else:
         print('The number of images are not corresponding!')
     trueArray = np.asarray(trueVector)
-    predArray = np.asarray(predVector)
-    for i in range(len(trueArray)):
-        if trueArray[i] in [50,85,170]:
-            trueArray[i] = 0
-    precision, recall,f1_score,support = PRFmetrics(trueArray,predArray,average='weighted')
+    predArray = np.asarray(predVector)        
+    for j in range(len(trueArray)):
+        if trueArray[j]==255:
+            trueArray[j] = 1
+        else:
+            trueArray[j] = 0
+    precision, recall,f1_score,support = PRFmetrics(trueArray, predArray, average='binary')
     return precision, recall, f1_score
-
+    
 
 
 # Input the pair of image and gt, this function will output the TP, FP, TN, FN
@@ -63,6 +65,12 @@ def evaluateOneFrame(frame,gt):
         trueVector.append(gt.flat[p])
     trueArray = np.asarray(trueVector)
     predArray = np.asarray(predVector)     
+    for i in range(len(trueArray)):
+        if trueArray[i] == 255:
+            trueArray[i] = 1
+        else:
+            trueArray[i] = 0
+    _, _,f1_score_one,_ = PRFmetrics(trueArray, predArray, average='binary')  
     TP=0
     TN=0
     FP=0
@@ -70,21 +78,17 @@ def evaluateOneFrame(frame,gt):
     # for the gt, we only consider two classes(0,255) represent background and motion respectively.
     for j in range(len(trueArray)):
         # True Positive (TP): we predict a label of 255 is positive, and the gt is 255.
-        if (trueArray[j] == predArray[j] == 255):
+        if trueArray[j] == predArray[j] == 1:
             TP = TP+1
         # True Negative (TN): we predict a label of 0 is negative, and the gt is 0.
-        if (trueArray[j] in [0,50,85,170]) and (predArray[j] == 0):
+        if trueArray[j] == predArray[j] == 0:
             TN = TN+1
         # False Positive (FP): we predict a label of 255 is positive, but the gt is 0.
-        if (trueArray[j] in [0,50,85,170]) and (predArray[j] == 255):
+        if trueArray[j] ==0 and predArray[j] == 1:
             FP = FP+1
         # False Negative (FN): we predict a label of 0 is negative, but the gt is 255.
-        if (trueArray[j] == 255) and (predArray[j] == 0):
-            FN = FN+1       
-    for i in range(len(trueArray)):
-        if trueArray[i] in [50,85,170]:
-            trueArray[i] = 0
-    f1_score_one = f1_score(trueArray, predArray,average='weighted')   
+        if trueArray[j] == 1 and predArray[j] == 0:
+            FN = FN+1      
     return TP, FN, f1_score_one
 
 def temproalTP(folder_path,gt_path):
