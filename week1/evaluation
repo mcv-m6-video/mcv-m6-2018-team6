@@ -91,13 +91,21 @@ def evaluateOneFrame(frame,gt):
             FN = FN+1      
     return TP, FN, f1_score_one
 
+# This function is for evaluating the True Positive along time
 def temproalTP(folder_path,gt_path):
     TF_list = []
     TP_list = []
-    for i in range(len(os.listdir(folder_path))):
-        frame = np.asarray(Image.open(os.path.join(folder_path, os.listdir(folder_path)[i])))
-        frame = frame*255
-        gtImage = np.asarray(Image.open(os.path.join(gt_path, os.listdir(gt_path)[i])))
+    fileList = []
+    gtList = []
+    for filename in sorted(glob.glob(os.path.join(folder_path, 'test_*_00*.png'))):
+        fileList.append(filename)
+    for gtname in sorted(glob.glob(os.path.join(gt_path, 'gt00*.png'))):
+        gtList.append(gtList)
+    fileArray = np.asarray(fileList)
+    gtArray = np.asarray(gtList) 
+    for i in range(len(fileArray)):
+        frame = cv2.imread(fileArray[i],0)
+        gtImage = cv2.imread(gtArray[i],0)
         TP, FN, f1_score_frame = evaluateOneFrame(frame, gtImage)
         TotalForeground = TP + FN
         TP_list.append(TP)
@@ -105,14 +113,24 @@ def temproalTP(folder_path,gt_path):
     plt.plot(np.arange(len(TP_list)),TP_list,)
     plt.plot(np.arange(len(TF_list)),TF_list)
     plt.show()
-            
+       
+
+# This function is for evaluating the F1-score along time
 def temproalFscore(folder_path,gt_path):
     f1score_list = []
-    for i in range(len(os.listdir(folder_path))):
-        frame = np.asarray(Image.open(os.path.join(folder_path, os.listdir(folder_path)[i])))
-        frame = frame*255
-        gtImage = np.asarray(Image.open(os.path.join(gt_path, os.listdir(gt_path)[i])))
+    fileList = []
+    gtList = []
+    for filename in sorted(glob.glob(os.path.join(folder_path, 'test_*_00*.png'))):
+        fileList.append(filename)
+    for gtname in sorted(glob.glob(os.path.join(gt_path, 'gt00*.png'))):
+        gtList.append(gtList)
+    fileArray = np.asarray(fileList)
+    gtArray = np.asarray(gtList) 
+    for i in range(len(fileArray)):
+        frame = cv2.imread(fileArray[i],0)
+        gtImage = cv2.imread(gtArray[i],0)
         _, _, f1_score_frame = evaluateOneFrame(frame, gtImage)
         f1score_list.append(f1_score_frame)
+    plt.ylim(0.00,1.00)
     plt.plot(np.arange(len(f1score_list)),f1score_list)
     plt.show()
