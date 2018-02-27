@@ -11,7 +11,7 @@ Created on Fri Feb 23 19:41:34 2018
 
 # week 1: Introduction, Databases, Evaluation Metrics
 
-# This is the script of task 1 and 2 in week 1
+# This is the script to be launched for week 1 tasks
 #--------------------------------------------------------------------
 
 import evaluation as ev
