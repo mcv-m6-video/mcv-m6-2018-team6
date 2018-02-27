@@ -105,10 +105,18 @@ def temproalTP(folder_path,gt_path):
         TotalForeground = TP + FN
         TP_list.append(TP)
         TF_list.append(TotalForeground)
+    plt.figure(1)
     plt.plot(np.arange(len(TP_list)),TP_list,'b',label='Ture Positive')
-    plt.plot(np.arange(len(TF_list)),TF_list,'c',label = 'Total Background')
+    plt.plot(np.arange(len(TF_list)),TF_list,'r',label = 'Total Background')
     plt.xlabel("Frames")
     plt.ylabel("Number of pixels")
+    font = {'family': 'serif',
+        'color':  'black',
+        'weight': 'normal',
+        'size': 12}
+    plt.title('TP&TF VS frames', fontdict=font)
+    plt.text(100, 7000, 'TP-blue', fontdict=font)
+    plt.text(100, 6000, 'TF-red', fontdict=font)
     plt.show()
 
 # This function is for evaluating the F1-score along time
@@ -125,4 +133,9 @@ def temproalFscore(folder_path,gt_path):
     plt.plot(np.arange(len(f1score_list)),f1score_list,'b',label = 'f1-score')
     plt.xlabel("Frames")
     plt.ylabel("precentage")
+    font = {'family': 'serif',
+        'color':  'black',
+        'weight': 'normal',
+        'size': 12}
+    plt.title('F1-score vs frames', fontdict=font)
     plt.show()
