@@ -1,0 +1,47 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Feb 26 20:56:55 2018
+
+@author: yixiao
+
+#--------------------------------------------------------------------
+# M6 - Video Analysis: Video Surveillance for Road Traffic Monitoring
+# Team06: YI XIAO, Juan Felipe Montesinos,Ferran Carrasquer
+
+# week 1: Introduction, Databases, Evaluation Metrics
+
+# This .py file is for defining some functions for evaluation of optical flow
+#--------------------------------------------------------------------
+"""
+
+import numpy as np
+import math
+
+# This function is for calculating the mean square of error in Non-occluded areas
+# and the percentage of Erroneous Pixels in Non-occluded areas 
+def MSEN_PEPN(OFtest,OFgt):
+    SquareErrorList=[]
+    test_u=[]
+    test_v=[]
+    gt_u=[]
+    gt_v=[]
+    gt_valid=[]
+    for ridx in range(OFtest.shape[0]):
+        for cidx in range(OFtest.shape[1]):
+            test_u.append(((float)(OFtest[:,:,1][ridx,cidx])-math.pow(2,15))/64.0)
+            test_v.append(((float)(OFtest[:,:,2][ridx,cidx])-math.pow(2,15))/64.0)
+            gt_u.append(((float)(OFgt[:,:,1][ridx,cidx])-math.pow(2,15))/64.0)
+            gt_v.append(((float)(OFgt[:,:,2][ridx,cidx])-math.pow(2,15))/64.0)
+            gt_valid.append(OFgt[:,:,0][ridx,cidx])
+    P=0
+    for i in range(len(gt_valid)):
+        if gt_valid[i]==1:
+            SquareError = math.sqrt(math.pow((gt_u [i]-test_u [i]),2)+math.pow((gt_v [i]-test_v [i]),2))
+            if SquareError>3.0:
+                P=P+1
+            SquareErrorList.append(SquareError)
+    SquareErrorVector=np.asarray(SquareErrorList)
+    MSEN = np.sum(SquareErrorVector)/len(SquareErrorVector)
+    PEPN = float(P)/len(SquareErrorVector)
+    return MSEN,PEPN
