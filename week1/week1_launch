@@ -44,10 +44,10 @@ ev.temproalFscore(folder_pathB,gt_path)
 
 ## task3: Quantitative evaluation of optical flow
 # seq 45
-OFtest = cv2.imread(os.path.join(OFtest_path, 'LKflow_000045_10.png'))
-OFgt = cv2.imread(os.path.join(OFgt_path, '000045_10.png'))
+OFtest = cv2.imread(os.path.join(OFtest_path, 'LKflow_000045_10.png'), -1)
+OFgt = cv2.imread(os.path.join(OFgt_path, '000045-10.png'), -1)
 MSEN1,PEPN1 = evOF.MSEN_PEPN(OFtest,OFgt)
 # seq 157
-OFtest = cv2.imread(os.path.join(OFtest_path, 'LKflow_000157_10.png'))
-OFgt = cv2.imread(os.path.join(OFgt_path, '000157_10.png'))
+OFtest = cv2.imread(os.path.join(OFtest_path, 'LKflow_000157_10.png'),-1)
+OFgt = cv2.imread(os.path.join(OFgt_path, '000157-10.png'),-1)
 MSEN2,PEPN2 = evOF.MSEN_PEPN(OFtest,OFgt)
