@@ -46,8 +46,8 @@ ev.temproalFscore(folder_pathB,gt_path)
 # seq 45
 OFtest = cv2.imread(os.path.join(OFtest_path, 'LKflow_000045_10.png'), -1)
 OFgt = cv2.imread(os.path.join(OFgt_path, '000045-10.png'), -1)
-MSEN1,PEPN1 = evOF.MSEN_PEPN(OFtest,OFgt)
+MSEN1,PEPN1 = ev.MSEN_PEPN(OFtest,OFgt)
 # seq 157
 OFtest = cv2.imread(os.path.join(OFtest_path, 'LKflow_000157_10.png'),-1)
 OFgt = cv2.imread(os.path.join(OFgt_path, '000157-10.png'),-1)
-MSEN2,PEPN2 = evOF.MSEN_PEPN(OFtest,OFgt)
+MSEN2,PEPN2 = ev.MSEN_PEPN(OFtest,OFgt)
