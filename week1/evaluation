@@ -47,7 +47,7 @@ def evaluateAllFrames(folder_path, gt_path):
     trueArray = np.asarray(trueVector)
     predArray = np.asarray(predVector)        
     for j in range(len(trueArray)):
-        if trueArray[j]==255:
+        if trueArray[j]==255 or trueArray[j]==170:
             trueArray[j] = 1
         else:
             trueArray[j] = 0
@@ -69,7 +69,7 @@ def evaluateOneFrame(frame,gt):
     trueArray = np.asarray(trueVector)
     predArray = np.asarray(predVector)     
     for i in range(len(trueArray)):
-        if trueArray[i] == 255:
+        if trueArray[i] == 255 or trueArray[j]==170:
             trueArray[i] = 1
         else:
             trueArray[i] = 0
