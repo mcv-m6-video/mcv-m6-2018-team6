@@ -52,3 +52,7 @@ OF.histSquareError(SquareErrorVector2)
 # colormap of square error
 OF.visulizeError(OFtest1,OFgt1)
 OF.visulizeError(OFtest2,OFgt2)
+
+# task4 visualizing the error
+ev.temporalFscore_desync(folder_pathA,gt_path)
+precision_B, recall_B, f1_score_B = ev.evAllFrames_delay(folder_pathA,folder_pathB,gt_path)
