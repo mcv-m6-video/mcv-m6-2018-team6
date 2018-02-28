@@ -69,7 +69,7 @@ def evaluateOneFrame(frame,gt):
     trueArray = np.asarray(trueVector)
     predArray = np.asarray(predVector)     
     for i in range(len(trueArray)):
-        if trueArray[i] == 255 or trueArray[j]==170:
+        if trueArray[i] == 255 or trueArray[i]==170:
             trueArray[i] = 1
         else:
             trueArray[i] = 0
