@@ -9,9 +9,9 @@ In this week, our goal is to learn how to evaluate and analysis video frames:
 To check all the tasks, there is a week1_launch file to direatly get the results in each task. 
 Here are some explaination of the python files:
 1. evaluation.py: including these function which relate to task1,2,4(highway images)-  
-evaluateAllFrames(), evaluateOneFrame(), temproalTP(), temproalFscore()
+evaluateAllFrames, evaluateOneFrame, temproalTP, temproalFscore
 2. OpticalFlow.py: including these funtion which relate to task3,5(optical flow)-  
-MSEN_PEPN(), histSquareError(), visulizeError()
+MSEN_PEPN, histSquareError, visulizeError
 
 ## task1 precision and recall  
 task1.1 Given the ground truth and results of two methods(A andd B), to get the precision, recall and f1-score and analysis the performance.  
