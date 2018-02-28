@@ -22,7 +22,7 @@ task3.2 PEPN
 task3.3 Analysis & Visualizations  
 
 ## task4 De-synchronization of results
-Force de-synchronized results for background substraction and study the results     
+task4 Force de-synchronized results for background substraction and study the results     
 
 ## task5 Optical flow plot
-plot and visualize the optical flow  
+task5 plot and visualize the optical flow  
