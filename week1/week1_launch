@@ -6,7 +6,6 @@ Created on Fri Feb 23 19:41:34 2018
 @author: yixiao
 """
 import evaluation as ev
-import evaluationOpticalFlow as evOF
 import os
 import cv2
 
@@ -39,11 +38,11 @@ ev.temproalFscore(folder_pathB,gt_path)
 # seq 45
 OFtest1 = cv2.imread(os.path.join(OFtest_path, 'LKflow_000045_10.png'), -1)
 OFgt1 = cv2.imread(os.path.join(OFgt_path, '000045-10.png'), -1)
-MSEN1,PEPN1,SquareErrorVector1 = evOF.MSEN_PEPN(OFtest1,OFgt1)
+MSEN1,PEPN1,SquareErrorVector1 = ev.MSEN_PEPN(OFtest1,OFgt1)
 # seq 157
 OFtest2 = cv2.imread(os.path.join(OFtest_path, 'LKflow_000157_10.png'),-1)
 OFgt2 = cv2.imread(os.path.join(OFgt_path, '000157-10.png'),-1)
-MSEN2,PEPN2,SquareErrorVector2 = evOF.MSEN_PEPN(OFtest2,OFgt2)
+MSEN2,PEPN2,SquareErrorVector2 = ev.MSEN_PEPN(OFtest2,OFgt2)
 
 # task3.2 visualizing the error
 # histogram
