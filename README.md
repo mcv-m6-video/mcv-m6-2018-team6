@@ -11,4 +11,4 @@ Yi Xiao(yi.xiao@e-campus.uab.cat)
 The goal of this 5-week project is to learn the basic concepts and techniques related to video sequences processing, mainly for surveillance applications.
 
 ## Week 1: Introduction, database understanding and evaluation metrics
-You can check the codes in week1 folder. There is a Readme file for instruction of launching the code
+You can check the codes in week1 folder. There is a README file for instructions of launching the codes
