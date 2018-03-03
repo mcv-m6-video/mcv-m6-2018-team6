@@ -19,8 +19,11 @@ Framework is OOP-based.
 ### Main class
 All the classes have the following attributes:
 name: [str] Brief description up to you. For example dataset name.
+
 im_dir: [str] Frame's folder directory
+
 gt_dir: [str] Groundtruth's folder directory
+
 color: [bool] [default=False] Using greyscale (false) or RGB images (true)
 
 #### gaussian1D
@@ -28,6 +31,7 @@ This class allows to perform a gaussian-based motion estimation. One gaussian (m
 
 Aditional attributes:
 mean: MxN(xc if color) numpy array which contains mean per pixel (per channel)
+
 std:  MxN(xc) numpy array which contains std per pixel (per channel)
 
 Methods:
