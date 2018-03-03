@@ -18,8 +18,9 @@ import cv2
 class gaussian1D:
     mean = None
     std  = None 
-    def __init__(self, color):
+    def __init__(self, color,name):
         self.color = color
+        self.name = name
         
     def get_1D(self,frame_list,frame_dir):
         im_patch = []
@@ -45,8 +46,6 @@ class gaussian1D:
         if self.color == False:
             im = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
         im = np.asarray(im)
-        print 'im: '+str(im.shape)
-        print 'self: '+str(self.mean.shape)
         diff = np.abs(self.mean-im)
         foreground = (diff >= th*(self.std+2))
         foreground = foreground.astype(int)
