@@ -28,10 +28,10 @@ for i in range(1050,1350):
     print 'in00'+str(i)+'.jpg'
 print 'done!'
 #Defining a class for highway dataset
-highway = g(False, 'highway_set')
+highway = g('highway_set',data_dir,gt_dir)
 print highway.name
 #Gaussian-based model--> compute
-highway.get_1D(frame_list,data_dir)
+highway.get_1D(frame_list)
 print 'Reading to-motion-estimate files:...'
 for i in range(1050,1350):
     im_dir = os.path.join(data_dir, 'in00'+str(i)+'.jpg')
@@ -43,6 +43,7 @@ for i in range(1050,1350):
     #Saving results (binary) 1=foreground 0 = background
     cv2.imwrite('results/res00'+str(i)+'.png',foreground)
 
+precision, recall, f1_score = highway.evaluateSeveralFrames(frame_list)
 print 'done! Press q to quit'
 if cv2.waitKey(10) == ord('q'):
     print 'Bye'
