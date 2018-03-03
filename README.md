@@ -19,10 +19,10 @@ Framework is OOP-based.
 ### Main class
 All the classes have the following attributes:
 
-name: [str] Brief description up to you. For example dataset name.
-im_dir: [str] Frame's folder directory
-gt_dir: [str] Groundtruth's folder directory
-color: [bool] [default=False] Using greyscale (false) or RGB images (true)
+name: [str] Brief description up to you. For example dataset name.  
+im_dir: [str] Frame's folder directory  
+gt_dir: [str] Groundtruth's folder directory  
+color: [bool] [default=False] Using greyscale (false) or RGB images (true)  
 
 ### gaussian1D
 This class allows to perform a gaussian-based motion estimation. One gaussian (mean,std) per pixel is computed
