@@ -133,18 +133,19 @@ class gaussian1D(Original):
         foreground = foreground.astype(int)
         return foreground
 
-    def evaluateSeveralFrames(self,frame_list):
+    def evaluateSeveralFrames(self,frame_list,gt_list):
         predVector = []
         trueVector = []
         for i in sorted(frame_list):
             im_dir = os.path.join(self.im_dir, i)
-            image = cv2.imread(im_dir,0)
+            image = cv2.imread(im_dir,-1)
             foreground = self.get_motion(image,2)
             for ridx in range(image.shape[0]):
                 for cidx in range(image.shape[1]):
                     predVector.append(foreground[ridx,cidx])
-        for filename in sorted(glob.glob(os.path.join(self.gt_dir, 'gt00*.png'))):
-            gtImage = cv2.imread(filename,0)
+        for i in sorted(gt_list):
+            gt_dir = os.path.join(self.gt_dir, i)
+            gtImage = cv2.imread(gt_dir,0)
             for ridx in range(gtImage.shape[0]):
                 for cidx in range(gtImage.shape[1]):
                     trueVector.append(gtImage[ridx,cidx])

@@ -22,13 +22,15 @@ print '......................................'
 print '......................................'
 #Creating a list of frame names to perform a background model
 frame_list = []
+gt_list = []
 print 'Reading background modeling files:...'
 for i in range(1050,1350):
     frame_list.append('in00'+str(i)+'.jpg')
+    gt_list.append('gt00'+str(i)+'.png')
     print 'in00'+str(i)+'.jpg'
 print 'done!'
 #Defining a class for highway dataset
-highway = g('highway_set',data_dir,gt_dir)
+highway = g('highway_set',data_dir,gt_dir,False)
 print highway.name
 #Gaussian-based model--> compute
 highway.get_1D(frame_list)
@@ -43,7 +45,7 @@ for i in range(1050,1350):
     #Saving results (binary) 1=foreground 0 = background
     cv2.imwrite('results/res00'+str(i)+'.png',foreground)
 
-precision, recall, f1_score = highway.evaluateSeveralFrames(frame_list)
+precision, recall, f1_score = highway.evaluateSeveralFrames(frame_list,gt_list)
 print 'done! Press q to quit'
 if cv2.waitKey(10) == ord('q'):
     print 'Bye'
