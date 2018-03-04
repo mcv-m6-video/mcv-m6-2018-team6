@@ -7,7 +7,7 @@ Juan Felipe Montesinos(jfmontgar@gmail.com)
 Ferran Carrasquer(ferrancarrasquer@gmail.com)  
 Yi Xiao(yi.xiao@e-campus.uab.cat)  
 
-<img src=header.jpeg" width="200" height="200">
++![](header.png)
 
 ## Abstract   
 The goal of this 5-week project is to learn the basic concepts and techniques related to video sequences processing, mainly for surveillance applications.
