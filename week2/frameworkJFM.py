@@ -15,6 +15,7 @@ import cv2
 import matplotlib.animation as animation
 import matplotlib.image as mgimg
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
 
 # Input the pair of image and gt, this function will output the TP, FP, TN, FN
@@ -114,7 +115,38 @@ class Original:
             if trueArray[j] == 1 and predArray[j] == 0:
                 FN = FN+1      
         return TP, FN, f1_score_one        
-        
+
+    def errorPainting(self,frame_list,gt_list,results_list_dir):
+        for i in range(len(frame_list)):
+            im_dir = os.path.join(self.im_dir, frame_list[i])
+            gt_dir = os.path.join(self.gt_dir, gt_list[i])
+            res = cv2.imread(results_list_dir[i],0)
+            im = cv2.imread(im_dir,-1)
+            gt = cv2.imread(gt_dir,0)
+            gt[gt==255]=1
+            gt[gt==50]=0
+            gt[gt==85]=0
+            gt[gt==170]=0
+            res=res.astype(bool)
+            gt=gt.astype(bool)
+            error1 = (res & ~gt) 
+            error2 = (~res & gt)
+            error = error1 | error2
+            b = im[:,:,0]
+            g = im[:,:,1]
+            r = im[:,:,2]
+            b[error==True]=0
+            g[error==True]=0
+            g[error1==True]=255
+            r[error2==True]=255
+            im[:,:,0]=b
+            im[:,:,1]=g
+            im[:,:,2]=r
+            cv2.imwrite(results_list_dir[i],im)
+            
+                        
+
+                
 #Defining a class to perform gaussian-based motion estimation
 class gaussian1D(Original):
     mean = None
@@ -202,6 +234,18 @@ class gaussian1D(Original):
         self.recall_vector = np.loadtxt(self.name+'_recall.txt')
         self.x = np.loadtxt(self.name+'_x.txt')
 
-
+    def PlotMeanStd(self):
+        #PLOTTING MEAN AND STD AS IMAGES AND STORING EM
+        fig, axes = plt.subplots(nrows=2, ncols=1)
+        im = axes[0].imshow(self.mean.astype(int), vmin=0, vmax=255)
+        axes[1].imshow(self.std.astype(int), vmin=0, vmax=255)
+        cax,kw = mpl.colorbar.make_axes([ax for ax in axes.flat])
+        plt.colorbar(im, cax=cax, **kw)
+        for i in range(len(axes)):
+            axes[i].axes.get_xaxis().set_visible(False)
+            axes[i].axes.get_yaxis().set_visible(False)
+        axes[0].set_title('Mean values')
+        axes[1].set_title('Std values')
+        plt.savefig(self.name+'_mean_stdplot.png', bbox_inches='tight', pad_inches = 0)
     
         

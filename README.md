@@ -29,7 +29,12 @@ Methods
 
 * **animacion(frame_list)**
 Creates a .gif file animating given a list of frames stored in im_dir directory
-
+* **errorPainting(frame_list,gt_list,results_list_dir)**
+Visualize False Positives and False Negatives for a set a given frames, comparing given results with groundtruth. Red represents False Negative and green represents false positive.
+![](errorPainting.png)
+*frame_list* list containing names of each frame. These frames are supossed to be stored in im_dir folder.  
+*gt_list:* list containing names of each groundtruth. These gt are supossed to be stored in gt_dir folder.  
+** *results_list_dir* ** list containing FULL DIRECTORY+NAME+FORMAT(.png ie) of binary results to be compared with groundtruth.  
 
 ### gaussian1D
 This class allows to perform a gaussian-based motion estimation. One gaussian (mean,std) per pixel is computed
@@ -78,4 +83,6 @@ Load textfiles saved with *saveAllvsalpha()* function. Files are supposed to be 
 * **PlotMeanStd()**
 Visualize mean and std modeled in a single graphic as the following one:  
 +![](example.png)
+
+
 
