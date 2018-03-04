@@ -19,6 +19,7 @@ import cv2
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 print 'MSc in Computer Vision Barcelona'
 print 'Universidad Politecnica de Catalunya'
 print '......................................'
@@ -32,14 +33,27 @@ for i in range(1050,1350):
     gt_list.append('gt00'+str(i)+'.png')
     print 'in00'+str(i)+'.jpg loaded'
 
-animacion = o('highway_im',data_dir,gt_dir)
-animacion.animacion(frame_list)
+#animacion = o('highway_im',data_dir,gt_dir)
+#animacion.animacion(frame_list)
 #print 'done!'
 ##Defining a class for highway dataset
-#highway = g('highway_set',data_dir,gt_dir,False)
+highway = g('highway',data_dir,gt_dir,False)
 #print highway.name
 ##Gaussian-based model--> compute
-#highway.get_1D(frame_list)
+highway.get_1D(frame_list)
+
+
+fig, axes = plt.subplots(nrows=2, ncols=1)
+im = axes[0].imshow(highway.mean.astype(int), vmin=0, vmax=255)
+axes[1].imshow(highway.std.astype(int), vmin=0, vmax=255)
+cax,kw = mpl.colorbar.make_axes([ax for ax in axes.flat])
+plt.colorbar(im, cax=cax, **kw)
+for i in range(len(axes)):
+    axes[i].axes.get_xaxis().set_visible(False)
+    axes[i].axes.get_yaxis().set_visible(False)
+axes[0].set_title('Mean values')
+axes[1].set_title('Std values')
+plt.savefig(highway.name+'_mean_stdplot.png', bbox_inches='tight', pad_inches = 0)
 #print 'Reading to-motion-estimate files:...'
 #for i in range(1050,1350):
 #    im_dir = os.path.join(data_dir, 'in00'+str(i)+'.jpg')

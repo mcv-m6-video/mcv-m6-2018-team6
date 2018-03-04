@@ -178,10 +178,30 @@ class gaussian1D(Original):
         return precision, recall, f1_score
     
 
-    def plotF1vsth(self,frame_list,gt_list,th_vector):
-        plot = []
+    def allvsalpha(self,frame_list,gt_list,th_vector):
+        self.F1_vector = []
+        self.precision_vector = []
+        self.recall_vector = []
+        self.x = th_vector
         for i in th_vector:
             precision, recall, F1 = self.evaluateSeveralFrames(frame_list,gt_list,i)
-            plot.append(F1)
+            self.F1_vector.append(F1)
+            self.precision_vector.append(precision)
+            self.recall_vector.append(recall)
             print str(i*10)+'% completed'
-        return plot, np.arange(0,10,0.25)
+            
+    def saveAllvsalpha(self):
+        np.savetxt(self.name+'_F1.txt',self.F1_vector)
+        np.savetxt(self.name+'_precision.txt',self.precision_vector)
+        np.savetxt(self.name+'_recall.txt',self.recall_vector)
+        np.savetxt(self.name+'_x.txt',self.x)
+    
+    def LoadAllvsalpha(self):
+        self.F1_vector= np.loadtxt(self.name+'_F1.txt')
+        self.precision_vector = np.loadtxt(self.name+'_precision.txt')
+        self.recall_vector = np.loadtxt(self.name+'_recall.txt')
+        self.x = np.loadtxt(self.name+'_x.txt')
+
+
+    
+        

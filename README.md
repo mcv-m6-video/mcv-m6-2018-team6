@@ -75,4 +75,7 @@ name + {_F1.txt,_precision.txt,_recall.txt}. Files saved in directory of work.
 
 * **LoadAllvsalpha()**
 Load textfiles saved with *saveAllvsalpha()* function. Files are supposed to be stored at directory of work.
+* **PlotMeanStd()**
+Visualize mean and std modeled in a single graphic as the following one:  
++![](example.png)
 
