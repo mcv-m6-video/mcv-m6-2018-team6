@@ -25,6 +25,12 @@ im_dir: [str] Frame's folder directory
 gt_dir: [str] Groundtruth's folder directory  
 color: [bool] [default=False] Using greyscale (false) or RGB images (true)  
 
+Methods
+
+* **animacion(frame_list)**
+Creates a .gif file animating given a list of frames stored in im_dir directory
+
+
 ### gaussian1D
 This class allows to perform a gaussian-based motion estimation. One gaussian (mean,std) per pixel is computed
 
@@ -40,9 +46,9 @@ Compute gaussian for every pixel in every channel and store them in the mean-std
 are supossed to be stored in im_dir folder
 
 * **get_motion(im,th)**
-Computes probabilistic motion estimation for a given image (im) using the model saved in the instance.
-*im:* [cvMat] RGB Image opened with cv2.imread procedure.
-*th:* [numerical] threshold for tunning probability of being motion.
+Computes probabilistic motion estimation for a given image (im) using the model saved in the instance.  
+*im:* [cvMat] RGB Image opened with cv2.imread procedure.  
+*th:* [numerical] threshold for tunning probability of being motion.  
 		if |Pixeli-MEANi|> (std+2)*th 
 
 * **evaluateSeveralFrames(frame_list,gt_list)**
@@ -54,4 +60,19 @@ are supossed to be stored in im_dir folder.
 are supossed to be stored in gt_dir folder.  
 
 Note: frames and their related grountruth images MUST share the same position in their respective lists.
+
+* **allvsalpha(frame_list,gt_list,th_lindspace)**
+Saves precision, recall and F1 vs alpha in class attributes.  
+*frame_list:* list containing names of each frame which will be used to compute the evaluation. These frames
+are supossed to be stored in im_dir folder.  
+*gt_list:* list containing names of each groundtruth which will be used to compute the evaluation. These gt
+are supossed to be stored in gt_dir folder.  
+*th_lindspace:* Vector of different alphas to perform allvsalpha
+
+* **saveAllvsalpha()**
+Save in txt files precision, recall, F1 values. Textfile names are predefined according to instance name:  
+name + {_F1.txt,_precision.txt,_recall.txt}. Files saved in directory of work.
+
+* **LoadAllvsalpha()**
+Load textfiles saved with *saveAllvsalpha()* function. Files are supposed to be stored at directory of work.
 
