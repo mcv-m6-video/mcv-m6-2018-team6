@@ -20,42 +20,6 @@ from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
 
 # Input the pair of image and gt, this function will output the TP, FP, TN, FN
 
-def evaluateOneFrame(frame,gt):
-    predVector = []
-    trueVector = []
-    for ridx in range(frame.shape[0]):
-        for cidx in range(frame.shape[1]):
-            predVector.append(frame[ridx,cidx])
-    for ridx in range(gt.shape[0]):
-        for cidx in range(gt.shape[1]):
-            trueVector.append(gt[ridx,cidx])
-    trueArray = np.asarray(trueVector)
-    predArray = np.asarray(predVector)     
-    for i in range(len(trueArray)):
-        if trueArray[i] == 255:
-            trueArray[i] = 1
-        else:
-            trueArray[i] = 0
-    _, _,f1_score_one,_ = PRFmetrics(trueArray, predArray, average='binary')  
-    TP=0
-    TN=0
-    FP=0
-    FN=0
-    # for the gt, we only consider two classes(0,255) represent background and motion respectively.
-    for j in range(len(trueArray)):
-        # True Positive (TP): we predict a label of 255 is positive, and the gt is 255.
-        if trueArray[j] == predArray[j] == 1:
-            TP = TP+1
-        # True Negative (TN): we predict a label of 0 is negative, and the gt is 0.
-        if trueArray[j] == predArray[j] == 0:
-            TN = TN+1
-        # False Positive (FP): we predict a label of 255 is positive, but the gt is 0.
-        if trueArray[j] ==0 and predArray[j] == 1:
-            FP = FP+1
-        # False Negative (FN): we predict a label of 0 is negative, but the gt is 255.
-        if trueArray[j] == 1 and predArray[j] == 0:
-            FN = FN+1      
-    return TP, FN, f1_score_one
 
 class Original: 
     def __init__(self,name,im_dir,gt_dir,color=False):
