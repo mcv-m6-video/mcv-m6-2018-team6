@@ -17,6 +17,7 @@ import matplotlib.image as mgimg
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
+import scipy.stats as ndis
 import math
 # Input the pair of image and gt, this function will output the TP, FP, TN, FN
 
@@ -147,17 +148,28 @@ class gaussian1D(Original):
             foreground = foreground.astype(int)
         elif self.color == 'RGB':
             im = np.asarray(im)
-            channelR = im[:,:,2] 
-            channelG = im[:,:,1]
-            channelB = im[:,:,0]
-            diffR = np.abs(self.mean[:,:,2]-channelR)
-            diffG = np.abs(self.mean[:,:,1]-channelG)
-            diffB = np.abs(self.mean[:,:,0]-channelB)
+#            channelR = im[:,:,2] 
+#            channelG = im[:,:,1]
+#            channelB = im[:,:,0]
+#            diffR = np.abs(self.mean[:,:,2]-channelR)
+#            diffG = np.abs(self.mean[:,:,1]-channelG)
+#            diffB = np.abs(self.mean[:,:,0]-channelB)
             # calculate the probability of Gaussian for each pixel in each channel
-            P_R = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,2],2)))*pow(math.e,-pow(diffR,2)/2*pow(self.std[:,:,2],2))
-            P_G = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,1],2)))*pow(math.e,-pow(diffG,2)/2*pow(self.std[:,:,1],2))
-            P_B = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,0],2)))*pow(math.e,-pow(diffB,2)/2*pow(self.std[:,:,0],2))
-            P = P_R*P_G*P_B*10000
+            Z = (im - self.mean)/(self.std+1)
+            m,n,c = im.shape
+            #Pc = np.zeros(im.shape)
+#            for i in range(m):
+#                for j in range(n):
+#                    for k in range(c):
+#                        Pc[i,j,k] = np.abs(ndis.norm(0,1).pdf(Z[i,j,k]) - 0.5)
+#            P_R = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,2],2)))*pow(math.e,-pow(diffR,2)/2*pow(self.std[:,:,2],2))
+#            P_G = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,1],2)))*pow(math.e,-pow(diffG,2)/2*pow(self.std[:,:,1],2))
+#            P_B = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,0],2)))*pow(math.e,-pow(diffB,2)/2*pow(self.std[:,:,0],2))
+            P_R = 1/(np.sqrt(2 * math.pi))*pow(math.e,-pow(Z[:,:,2],2))/2
+            P_G = 1/(np.sqrt(2 * math.pi))*pow(math.e,-pow(Z[:,:,1],2))/2
+            P_B = 1/(np.sqrt(2 * math.pi))*pow(math.e,-pow(Z[:,:,0],2))/2          
+#           P = np.multiply(np.multiply(Pc[:,:,0],Pc[:,:,1]),Pc[:,:,2])
+            P = np.multiply(np.multiply(P_R,P_G),P_B)
             foreground = (P >= th)
             foreground = foreground.astype(int)
         return foreground
@@ -213,17 +225,31 @@ class gaussian1D(Original):
 
     def PlotMeanStd(self):
         #PLOTTING MEAN AND STD AS IMAGES AND STORING EM
-        for j in range(self.mean.ndim):
-            fig, axes = plt.subplots(nrows=2, ncols=1)
-            im = axes[0].imshow(self.mean[:,:,j].astype(int), vmin=0, vmax=255)
-            axes[1].imshow(self.std[:,:,j].astype(int), vmin=0, vmax=255)
-            cax,kw = mpl.colorbar.make_axes([ax for ax in axes.flat])
-            plt.colorbar(im, cax=cax, **kw)
-            for i in range(len(axes)):
-                axes[i].axes.get_xaxis().set_visible(False)
-                axes[i].axes.get_yaxis().set_visible(False)
-            axes[0].set_title('Mean values')
-            axes[1].set_title('Std values')
-            plt.savefig(self.name+'_mean_stdplot'+str(j)+'.png', bbox_inches='tight', pad_inches = 0)
-            plt.close()
+        if self.color =='gray':
+                fig, axes = plt.subplots(nrows=2, ncols=1)
+                im = axes[0].imshow(self.mean.astype(int), vmin=0, vmax=255)
+                axes[1].imshow(self.std.astype(int), vmin=0, vmax=255)
+                cax,kw = mpl.colorbar.make_axes([ax for ax in axes.flat])
+                plt.colorbar(im, cax=cax, **kw)
+                for i in range(len(axes)):
+                    axes[i].axes.get_xaxis().set_visible(False)
+                    axes[i].axes.get_yaxis().set_visible(False)
+                axes[0].set_title('Mean values')
+                axes[1].set_title('Std values')
+                plt.savefig(self.name+'_mean_stdplot''.png', bbox_inches='tight', pad_inches = 0)
+                plt.close()
+        else:
+            for j in range(self.mean.ndim):
+                fig, axes = plt.subplots(nrows=2, ncols=1)
+                im = axes[0].imshow(self.mean[:,:,j].astype(int), vmin=0, vmax=255)
+                axes[1].imshow(self.std[:,:,j].astype(int), vmin=0, vmax=255)
+                cax,kw = mpl.colorbar.make_axes([ax for ax in axes.flat])
+                plt.colorbar(im, cax=cax, **kw)
+                for i in range(len(axes)):
+                    axes[i].axes.get_xaxis().set_visible(False)
+                    axes[i].axes.get_yaxis().set_visible(False)
+                axes[0].set_title('Mean values')
+                axes[1].set_title('Std values')
+                plt.savefig(self.name+'_mean_stdplot'+str(j)+'.png', bbox_inches='tight', pad_inches = 0)
+                plt.close()            
         
