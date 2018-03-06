@@ -17,7 +17,7 @@ import matplotlib.image as mgimg
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
-
+import math
 # Input the pair of image and gt, this function will output the TP, FP, TN, FN
 
 
@@ -42,7 +42,7 @@ class Original:
         ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
                                         repeat_delay=1000)      
         ani.save(self.name+'.gif')
-        
+        plt.close()
     def evaluateOneFrame(frame,gt):
         predVector = []
         trueVector = []
@@ -154,10 +154,10 @@ class gaussian1D(Original):
             diffG = np.abs(self.mean[:,:,1]-channelG)
             diffB = np.abs(self.mean[:,:,0]-channelB)
             # calculate the probability of Gaussian for each pixel in each channel
-            P_R = 1/(np.sqrt(2 * math.pi * pow(self.std[:,:,2],2)))*pow(math.e,-pow(diffR,2)/2*pow(self.std[:,:,2],2))
-            P_G = 1/(np.sqrt(2 * math.pi * pow(self.std[:,:,1],2)))*pow(math.e,-pow(diffG,2)/2*pow(self.std[:,:,1],2))
-            P_B = 1/(np.sqrt(2 * math.pi * pow(self.std[:,:,0],2)))*pow(math.e,-pow(diffB,2)/2*pow(self.std[:,:,0],2))
-            P = P_R*P_G*P_B
+            P_R = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,2],2)))*pow(math.e,-pow(diffR,2)/2*pow(self.std[:,:,2],2))
+            P_G = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,1],2)))*pow(math.e,-pow(diffG,2)/2*pow(self.std[:,:,1],2))
+            P_B = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,0],2)))*pow(math.e,-pow(diffB,2)/2*pow(self.std[:,:,0],2))
+            P = P_R*P_G*P_B*10000
             foreground = (P >= th)
             foreground = foreground.astype(int)
         return foreground
@@ -197,7 +197,7 @@ class gaussian1D(Original):
             self.F1_vector.append(F1)
             self.precision_vector.append(precision)
             self.recall_vector.append(recall)
-            print str(i*10)+'% completed'
+            print str(i*100/self.x.max())+'% completed'
             
     def saveAllvsalpha(self):
         np.savetxt(self.name+'_F1.txt',self.F1_vector)
@@ -213,16 +213,17 @@ class gaussian1D(Original):
 
     def PlotMeanStd(self):
         #PLOTTING MEAN AND STD AS IMAGES AND STORING EM
-        fig, axes = plt.subplots(nrows=2, ncols=1)
-        im = axes[0].imshow(self.mean.astype(int), vmin=0, vmax=255)
-        axes[1].imshow(self.std.astype(int), vmin=0, vmax=255)
-        cax,kw = mpl.colorbar.make_axes([ax for ax in axes.flat])
-        plt.colorbar(im, cax=cax, **kw)
-        for i in range(len(axes)):
-            axes[i].axes.get_xaxis().set_visible(False)
-            axes[i].axes.get_yaxis().set_visible(False)
-        axes[0].set_title('Mean values')
-        axes[1].set_title('Std values')
-        plt.savefig(self.name+'_mean_stdplot.png', bbox_inches='tight', pad_inches = 0)
-    
+        for j in range(self.mean.ndim):
+            fig, axes = plt.subplots(nrows=2, ncols=1)
+            im = axes[0].imshow(self.mean[:,:,j].astype(int), vmin=0, vmax=255)
+            axes[1].imshow(self.std[:,:,j].astype(int), vmin=0, vmax=255)
+            cax,kw = mpl.colorbar.make_axes([ax for ax in axes.flat])
+            plt.colorbar(im, cax=cax, **kw)
+            for i in range(len(axes)):
+                axes[i].axes.get_xaxis().set_visible(False)
+                axes[i].axes.get_yaxis().set_visible(False)
+            axes[0].set_title('Mean values')
+            axes[1].set_title('Std values')
+            plt.savefig(self.name+'_mean_stdplot'+str(j)+'.png', bbox_inches='tight', pad_inches = 0)
+            plt.close()
         
