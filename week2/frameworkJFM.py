@@ -153,12 +153,10 @@ class gaussian1D(Original):
             diffR = np.abs(self.mean[:,:,2]-channelR)
             diffG = np.abs(self.mean[:,:,1]-channelG)
             diffB = np.abs(self.mean[:,:,0]-channelB)
-            # calculate the probability of Gaussian for each pixel in each channel
-            P_R = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,2],2)))*pow(math.e,-pow(diffR,2)/2*pow(self.std[:,:,2],2))
-            P_G = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,1],2)))*pow(math.e,-pow(diffG,2)/2*pow(self.std[:,:,1],2))
-            P_B = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,0],2)))*pow(math.e,-pow(diffB,2)/2*pow(self.std[:,:,0],2))
-            P = P_R*P_G*P_B*10000
-            foreground = (P >= th)
+            foreground_R = (diffR >= th*(self.std[:,:,2]+2))
+            foreground_G = (diffG >= th*(self.std[:,:,1]+2))
+            foreground_B = (diffB >= th*(self.std[:,:,0]+2))
+            foreground = np.logical_and(foreground_R,foreground_G,foreground_B)
             foreground = foreground.astype(int)
         return foreground
 
