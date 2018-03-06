@@ -58,7 +58,7 @@ def evaluateOneFrame(frame,gt):
     return TP, FN, f1_score_one
 
 class Original: 
-    def __init__(self,name,im_dir,gt_dir,color=False):
+    def __init__(self,name,im_dir,gt_dir,color='gray'):
         self.color = color
         self.name = name
         self.im_dir = im_dir
@@ -159,27 +159,43 @@ class gaussian1D(Original):
         #grayscale or not)
         for i in sorted(frame_list):
             im_dir = os.path.join(self.im_dir, i)
-            if self.color==False:
+            if self.color=='gray':
                 image = cv2.cvtColor(cv2.imread(im_dir,-1),cv2.COLOR_BGR2GRAY)
-            else:
+                im_patch.append(image)
+            elif self.color=='RGB':
                 image = cv2.imread(im_dir,-1)
-            im_patch.append(image)
+                im_patch.append(image)
             
         im_patch = np.asarray(im_patch)
-        if self.color==True:
-            self.mean = im_patch.mean(axis=3)
-            self.std  = im_patch.std(axis=3)
-        else:
+        if self.color=='gray':
             self.mean = im_patch.mean(axis=0)
             self.std  = im_patch.std(axis=0)
-
+        elif self.color=='RGB':
+            self.mean = im_patch.mean(axis=0)
+            self.std  = im_patch.std(axis=0)
+    
     def get_motion(self,im,th):
-        if self.color == False:
+        if self.color == 'gray':
             im = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-        im = np.asarray(im)
-        diff = np.abs(self.mean-im)
-        foreground = (diff >= th*(self.std+2))
-        foreground = foreground.astype(int)
+            im = np.asarray(im)
+            diff = np.abs(self.mean-im)
+            foreground = (diff >= th*(self.std+2))
+            foreground = foreground.astype(int)
+        elif self.color == 'RGB':
+            im = np.asarray(im)
+            channelR = im[:,:,2] 
+            channelG = im[:,:,1]
+            channelB = im[:,:,0]
+            diffR = np.abs(self.mean[:,:,2]-channelR)
+            diffG = np.abs(self.mean[:,:,1]-channelG)
+            diffB = np.abs(self.mean[:,:,0]-channelB)
+            # calculate the probability of Gaussian for each pixel in each channel
+            P_R = 1/(np.sqrt(2 * math.pi * pow(self.std[:,:,2],2)))*pow(math.e,-pow(diffR,2)/2*pow(self.std[:,:,2],2))
+            P_G = 1/(np.sqrt(2 * math.pi * pow(self.std[:,:,1],2)))*pow(math.e,-pow(diffG,2)/2*pow(self.std[:,:,1],2))
+            P_B = 1/(np.sqrt(2 * math.pi * pow(self.std[:,:,0],2)))*pow(math.e,-pow(diffB,2)/2*pow(self.std[:,:,0],2))
+            P = P_R*P_G*P_B
+            foreground = (P >= th)
+            foreground = foreground.astype(int)
         return foreground
 
     def evaluateSeveralFrames(self,frame_list,gt_list,th):
