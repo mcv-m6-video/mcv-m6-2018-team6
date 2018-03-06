@@ -189,24 +189,21 @@ class gaussian1D(Original):
             im_dir = os.path.join(self.im_dir, i)
             image = cv2.imread(im_dir,-1)
             foreground = self.get_motion(image,th)
-            for ridx in range(image.shape[0]):
-                for cidx in range(image.shape[1]):
-                    predVector.append(foreground[ridx,cidx])
         for i in sorted(gt_list):
             gt_dir = os.path.join(self.gt_dir, i)
             gtImage = cv2.imread(gt_dir,0)
             for ridx in range(gtImage.shape[0]):
                 for cidx in range(gtImage.shape[1]):
-                    trueVector.append(gtImage[ridx,cidx])
-
+                    if gtImage [ridx,cidx]==255:
+                        trueVector.append(1)
+                        predVector.append(foreground[ridx,cidx])
+                    elif gtImage [ridx,cidx]==0 or gtImage [ridx,cidx]==50:
+                        trueVector.append(0) 
+                        predVector.append(foreground[ridx,cidx])
+        
         trueArray = np.asarray(trueVector)
         predArray = np.asarray(predVector)        
-        for j in range(len(trueArray)):
-            if trueArray[j]==255:
-                trueArray[j] = 1
-            else:
-                trueArray[j] = 0
-        precision, recall,f1_score,support = PRFmetrics(trueArray, predArray, average='binary')
+        precision, recall,f1_score,support = PRFmetrics(trueArray, predArray,average='binary')
         return precision, recall, f1_score
     
 
