@@ -127,7 +127,7 @@ class gaussian1D(Original):
             if self.color=='gray':
                 image = cv2.cvtColor(cv2.imread(im_dir,-1),cv2.COLOR_BGR2GRAY)
                 im_patch.append(image)
-            elif self.color=='RGB':
+            elif self.color=='RGB' or self.color=='HSV':
                 image = cv2.imread(im_dir,-1)
                 im_patch.append(image)
             
@@ -135,7 +135,7 @@ class gaussian1D(Original):
         if self.color=='gray':
             self.mean = im_patch.mean(axis=0)
             self.std  = im_patch.std(axis=0)
-        elif self.color=='RGB':
+        elif self.color=='RGB' or self.color=='HSV' :
             self.mean = im_patch.mean(axis=0)
             self.std  = im_patch.std(axis=0)
     
@@ -148,29 +148,32 @@ class gaussian1D(Original):
             foreground = foreground.astype(int)
         elif self.color == 'RGB':
             im = np.asarray(im)
-#            channelR = im[:,:,2] 
-#            channelG = im[:,:,1]
-#            channelB = im[:,:,0]
-#            diffR = np.abs(self.mean[:,:,2]-channelR)
-#            diffG = np.abs(self.mean[:,:,1]-channelG)
-#            diffB = np.abs(self.mean[:,:,0]-channelB)
-            # calculate the probability of Gaussian for each pixel in each channel
-            Z = (im - self.mean)/(self.std+1)
-            m,n,c = im.shape
-            #Pc = np.zeros(im.shape)
-#            for i in range(m):
-#                for j in range(n):
-#                    for k in range(c):
-#                        Pc[i,j,k] = np.abs(ndis.norm(0,1).pdf(Z[i,j,k]) - 0.5)
-#            P_R = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,2],2)))*pow(math.e,-pow(diffR,2)/2*pow(self.std[:,:,2],2))
-#            P_G = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,1],2)))*pow(math.e,-pow(diffG,2)/2*pow(self.std[:,:,1],2))
-#            P_B = 1/(np.sqrt(1+2 * math.pi * pow(self.std[:,:,0],2)))*pow(math.e,-pow(diffB,2)/2*pow(self.std[:,:,0],2))
-            P_R = 1/(np.sqrt(2 * math.pi))*pow(math.e,-pow(Z[:,:,2],2))/2
-            P_G = 1/(np.sqrt(2 * math.pi))*pow(math.e,-pow(Z[:,:,1],2))/2
-            P_B = 1/(np.sqrt(2 * math.pi))*pow(math.e,-pow(Z[:,:,0],2))/2          
-#           P = np.multiply(np.multiply(Pc[:,:,0],Pc[:,:,1]),Pc[:,:,2])
-            P = np.multiply(np.multiply(P_R,P_G),P_B)
-            foreground = (P >= th)
+
+            channelR = im[:,:,2] 
+            channelG = im[:,:,1]
+            channelB = im[:,:,0]
+            diffR = np.abs(self.mean[:,:,2]-channelR)
+            diffG = np.abs(self.mean[:,:,1]-channelG)
+            diffB = np.abs(self.mean[:,:,0]-channelB)
+            foreground_R = (diffR >= th*(self.std[:,:,2]+2))
+            foreground_G = (diffG >= th*(self.std[:,:,1]+2))
+            foreground_B = (diffB >= th*(self.std[:,:,0]+2))
+            foreground = np.logical_and(foreground_R,foreground_G,foreground_B)
+            foreground = foreground.astype(int)
+        elif self.color == 'HSV':
+            im = cv2.cvtColor(im,cv2.COLOR_BGR2HSV)
+            channelH = im[:,:,0] 
+            channelS = im[:,:,1]
+            #channelV = im[:,:,2]
+            diffH = np.abs(self.mean[:,:,0]-channelH)
+            diffS = np.abs(self.mean[:,:,1]-channelS)
+            #diffV = np.abs(self.mean[:,:,2]-channelV)
+            foreground_H = (diffH >= th*(self.std[:,:,0]+2))
+            foreground_S = (diffS >= th*(self.std[:,:,1]+2))
+            #foreground_V = (diffV >= th*(self.std[:,:,2]+2))  
+            # we dont take into account the V channel 
+            foreground = np.logical_and(foreground_H,foreground_S)
+
             foreground = foreground.astype(int)
         return foreground
 
