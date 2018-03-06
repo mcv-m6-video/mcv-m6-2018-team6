@@ -122,7 +122,7 @@ highway.get_1D(frames_train)
 ###Plot Mean and Std
 highway.PlotMeanStd()
 ### Computing metric vs alpha
-highway.allvsalpha(frames_test,gt_test,np.arange(0,1.05,0.05))
+highway.allvsalpha(frames_test,gt_test,np.arange(0,10,0.25))
 #highway.LoadAllvsalpha()
 highway.saveAllvsalpha()
 print 'Reading to-motion-estimate files:...'
