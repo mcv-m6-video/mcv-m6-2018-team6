@@ -126,7 +126,7 @@ class gaussian1D(Original):
             if self.color=='gray':
                 image = cv2.cvtColor(cv2.imread(im_dir,-1),cv2.COLOR_BGR2GRAY)
                 im_patch.append(image)
-            elif self.color=='RGB':
+            elif self.color=='RGB' or self.color=='HSV':
                 image = cv2.imread(im_dir,-1)
                 im_patch.append(image)
             
@@ -134,7 +134,7 @@ class gaussian1D(Original):
         if self.color=='gray':
             self.mean = im_patch.mean(axis=0)
             self.std  = im_patch.std(axis=0)
-        elif self.color=='RGB':
+        elif self.color=='RGB' or self.color=='HSV' :
             self.mean = im_patch.mean(axis=0)
             self.std  = im_patch.std(axis=0)
     
@@ -157,6 +157,20 @@ class gaussian1D(Original):
             foreground_G = (diffG >= th*(self.std[:,:,1]+2))
             foreground_B = (diffB >= th*(self.std[:,:,0]+2))
             foreground = np.logical_and(foreground_R,foreground_G,foreground_B)
+            foreground = foreground.astype(int)
+        elif self.color == 'HSV':
+            im = cv2.cvtColor(im,cv2.COLOR_BGR2HSV)
+            channelH = im[:,:,0] 
+            channelS = im[:,:,1]
+            #channelV = im[:,:,2]
+            diffH = np.abs(self.mean[:,:,0]-channelH)
+            diffS = np.abs(self.mean[:,:,1]-channelS)
+            #diffV = np.abs(self.mean[:,:,2]-channelV)
+            foreground_H = (diffH >= th*(self.std[:,:,0]+2))
+            foreground_S = (diffS >= th*(self.std[:,:,1]+2))
+            #foreground_V = (diffV >= th*(self.std[:,:,2]+2))  
+            # we dont take into account the V channel 
+            foreground = np.logical_and(foreground_H,foreground_S)
             foreground = foreground.astype(int)
         return foreground
 
