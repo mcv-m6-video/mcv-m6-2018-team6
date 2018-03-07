@@ -17,6 +17,7 @@ from frameworkJFMV2 import adaptative as g
 from frameworkJFMV2 import Original as o
 import cv2
 import os
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import matplotlib.pyplot as plt
 print 'MSc in Computer Vision Barcelona'
@@ -85,37 +86,38 @@ print '......................................'
 ##### ===========================================================================
 data_dir = '/media/jfm/Slave/Data/datasets/fall/input'
 gt_dir   = '/media/jfm/Slave/Data/datasets/fall/groundtruth'
-###Creating a list of frame names to perform a background model
-frames_train = []
-gt_train = []
-
-frames_test = []
-gt_test = []
-
-print 'Reading background modeling files:...'
-for i in range(1460,1511):
-    frames_train.append('in00'+str(i)+'.jpg')
-    gt_train.append('gt00'+str(i)+'.png')
-    print 'in00'+str(i)+'.jpg loaded'
-for i in range(1511,1561):
-    frames_test.append('in00'+str(i)+'.jpg')
-    gt_test.append('gt00'+str(i)+'.png')
-    print 'in00'+str(i)+'.jpg loaded'
-print 'Done!'
-
-###Defining an instance for fall dataset
-
+####Creating a list of frame names to perform a background model
+#frames_train = []
+#gt_train = []
+#
+#frames_test = []
+#gt_test = []
+#
+#print 'Reading background modeling files:...'
+#for i in range(1460,1511):
+#    frames_train.append('in00'+str(i)+'.jpg')
+#    gt_train.append('gt00'+str(i)+'.png')
+#    print 'in00'+str(i)+'.jpg loaded'
+#for i in range(1511,1561):
+#    frames_test.append('in00'+str(i)+'.jpg')
+#    gt_test.append('gt00'+str(i)+'.png')
+#    print 'in00'+str(i)+'.jpg loaded'
+#print 'Done!'
+#
+####Defining an instance for fall dataset
+#
 fall = g('fall_ad',data_dir,gt_dir,'gray')
-print 'Instance ' +fall.name +' created'
-
-##Compute background model (gaussian-based)
+#print 'Instance ' +fall.name +' created'
+#
+###Compute background model (gaussian-based)
 fall.get_1D(frames_train)
-##Plot Mean and Std
-fall.PlotMeanStd()
-plt.close()
-### Computing metric vs alpha
-fall.allvsalpha(frames_test,gt_test,np.arange(0,6,1),np.arange(0,1,0.2))
-fall.saveAllvsalpha()
+###Plot Mean and Std
+#fall.PlotMeanStd()
+#plt.close()
+#### Computing metric vs alpha
+#fall.allvsalpha(frames_test,gt_test,np.arange(0,6,1),np.arange(0,1,0.2))
+#fall.saveAllvsalpha()
+fall.LoadAllvsalpha()
 print 'Reading to-motion-estimate files:...'
 results_list_dir = []
 for i in range(1511,1561):
@@ -131,10 +133,10 @@ for i in range(1511,1561):
     results_list_dir.append('results_fall/00'+str(i)+'.png')
 
 ### Creating gif of RGB images + FP + FN
-fall.errorPainting(frames_test,gt_test,results_list_dir)
+#fall.errorPainting(frames_test,gt_test,results_list_dir)
 
 ### Creating a gif of motion estimation results
-animar = o('fall_gif_gray','results_fall_gray',gt_dir)
+animar = o('fall_gif_gray','results_fall',gt_dir)
 res_list = []
 for i in range(1511,1561):
     res_list.append('00'+str(i)+'.png')
@@ -143,7 +145,7 @@ animar.animacion(res_list)
 alpha, beta = np.meshgrid(fall.alpha, fall.beta)
 fig = plt.figure()
 ax = fig.gca(projection='3d')
-surf = ax.plot_surface(alpha, beta, fall.F1_vector, cmap=cm.coolwarm,
+surf = ax.plot_surface(alpha, beta, np.transpose(fall.F1_vector), cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)
 fig.colorbar(surf, shrink=0.5, aspect=5)
 

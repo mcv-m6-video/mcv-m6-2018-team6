@@ -21,8 +21,13 @@ import scipy.stats as ndis
 import math
 
 # Input the pair of image and gt, this function will output the TP, FP, TN, FN
-
-    
+def index_rep(a,b,c):
+    no_c = ~c 
+    no_c = no_c.astype(int)
+    c = c.astype(int)
+    out = np.multiply(a,no_c) + np.multiply(b,c)
+    return out
+       
 class Original: 
     def __init__(self,name,im_dir,gt_dir,color='gray'):
         self.color = color
@@ -273,18 +278,24 @@ class MOG(gaussian1D):
             foreground = foreground.astype(bool)
             foreground = foreground.astype(int)
             return foreground
-            
+def bgr2gray(rgb):
+
+    b,g,r = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
+    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
+    return gray          
 class adaptative(gaussian1D):
         def get_motion(self,im,th):
             if self.color == 'gray':
-                im = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+                #im = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+                im = bgr2gray(im)
                 im = np.asarray(im)
                 diff = np.abs(self.mean-im)
                 foreground = (diff >= th[1]*(self.std+2))
-                print self.mean[foreground==False], foreground
-                self.mean[foreground==False] = th[0]*im[foreground==False]+(1-th[0])*self.mean
-                self.std[foreground == False] = np.sqrt(th)*(im[foreground == False]-
-                self.mean[foreground == False])+np.sqrt(1-th[0])*self.std[foreground == False]
+                index_rep(self.mean,th[0]*im+(1-th[0])*self.mean,foreground == False)
+                #self.mean[foreground==False] = th[0]*im[foreground==False]+(1-th[0])*self.mean
+                index_rep(self.std,np.sqrt(th[0])*(im-self.mean)+np.sqrt(1-th[0]*self.std),foreground == False)
+#                self.std[foreground == False] = np.sqrt(th)*(im[foreground == False]-
+#                self.mean[foreground == False])+np.sqrt(1-th[0])*self.std[foreground == False]
                 foreground = foreground.astype(int)
                 return foreground
         def allvsalpha(self,frame_list,gt_list,alpha,beta):
@@ -296,11 +307,25 @@ class adaptative(gaussian1D):
             i_a = 0
             i_b = 0
             for i in alpha:
+                i_b = 0
                 for j in beta:
-                    precision, recall, F1 = self.evaluateSeveralFrames(frame_list,gt_list,[j,i])
+                    precision, recall, F1 = self.evaluateSeveralFrames(frame_list,gt_list,[i,j])
                     self.F1_vector[i_a,i_b] = F1
                     self.precision_vector[i_a,i_b] = precision
                     self.recall_vector[i_a,i_b] = recall
                     i_b = i_b +1
                     print str(i*100/self.alpha.max())+'% completed'
                 i_a = i_a +1
+        def saveAllvsalpha(self):
+            np.savetxt(self.name+'_F1.txt',self.F1_vector)
+            np.savetxt(self.name+'_precision.txt',self.precision_vector)
+            np.savetxt(self.name+'_recall.txt',self.recall_vector)
+            np.savetxt(self.name+'_alpha.txt',self.alpha)
+            np.savetxt(self.name+'_beta.txt',self.beta)
+    
+        def LoadAllvsalpha(self):
+            self.F1_vector= np.loadtxt(self.name+'_F1.txt')
+            self.precision_vector = np.loadtxt(self.name+'_precision.txt')
+            self.recall_vector = np.loadtxt(self.name+'_recall.txt')
+            self.alpha = np.loadtxt(self.name+'_alpha.txt')
+            self.beta = np.loadtxt(self.name+'_beta.txt')
