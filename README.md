@@ -28,7 +28,7 @@ color: [str] [default='gray'] Using greyscale 'gray', RGB 'RGB' or HSV 'HSV' col
 Methods
 
 * **animacion(frame_list)**
-Creates a .gif file animating given a list of frames stored in im_dir directory.
+Creates a .gif file animating given a list of frames stored in im_dir directory. Displaying anamation of results from errorPainting.  
 ![](week2/fall_gif_gray_bueno.gif)  
 * **errorPainting(frame_list,gt_list,results_list_dir)**
 Visualize False Positives and False Negatives for a set a given frames, comparing given results with groundtruth. Red represents False Negative and green represents false positive.
@@ -106,7 +106,7 @@ Note: frames and their related grountruth images MUST share the same position in
 Computes probabilistic motion estimation for a given image (im) using the model saved in the instance.  
 *im:* [cvMat] RGB Image opened with cv2.imread procedure.  
 
-###adaptative
+### adaptative
 Only available as grayscale.  
 **All gaussian1D functions available**
 Computes an adaptative model the same way as gaussian1D but updating mean and std.  
