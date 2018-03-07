@@ -1,6 +1,43 @@
 # Video Surveillance for Road Traffic Monitoring
 Master in Computer Vision - M6 Visual Analysis
 
+ 
+# Week 2
+In this week, our goal is to learn how to model the background video frames:  
+1. Understand and become familiar with the background/foreground. 
+2. Learn about how to choose a background 
+3. Implement state of the art methods for background modelling.  
+4. Do it in grayscale images and color images.
 
-## Week2  
 
+## task1 Gaussian Distribution  
+task1.1 Gaussian modelling. The dataset will be divided in two, the first half will be used for modelling the background (for
+extracting mean and std) and the second half will be used to segment the foregorund.
+  instructions: task1.py | given one of the three datasets it will provide a .gif with the performance and mean and std values plotted.
+
+task1.2 F1_score vs alpha. When modelling the background, it is needed to choose an alpha as setting a threshold for the
+permisivity of the algorithm to classify one pixel as a background or foreground. A plot of F1 vs alpha will help to see and 
+choose the best alpha over a range of it.
+  instructions:task1.py | given one of the three datasets it will provide a plot with the F1 vs alpha curve.
+
+task1.3 Evaluation AUC-PR: The Precision Recall curve is plotted and the Area Under the Curve is calculated. This value
+will asses the performance of the background classifier.
+  instructions: task1.py | given one of the three datasets it will provide a plot Precision-Recall curve and AUC values.
+
+## task2 Adaptive Modelling
+task2.1 Adaptive Modelling (Baseline). In this case there is a grid search for the best alpha and rho parameters that
+gives the best F1 value score. The mean and std of the background is first estimated with the half of the frames.
+  instructions: mainV3.py | given a dataset it will provide the grid search graph and the best values to get the best performance.
+task2.2 Comparison adaptive vs non 
+
+## task3 Comparison with state-of-the-art
+task3 Comparison of the Single Gaussian developed versus the BackgroundSubstractorMOG from OpenCV (adaptive model)
+  instructions: sota.py | given a dataset it will provide a .gif with the performance and the F1 score of the MOG technique.  
+
+## task4 Color sequences
+task4 Update of the task 1 with an implementation to support color sequences:
+1.rgb:Red Green Blue channels.
+  instructions: mainV3.py | given a datast and RGB chosen, it provides the F1 values vs Alpha to see which is the largest F1-scor (prediction of the foreground).
+2.hsv: Hue Saturation Value channels.
+instructions: mainV3.py | given a datast and HSV chosen, it provides the F1 values vs Alpha to see which is the largest F1-score.(prediction of the foreground).
+ 
