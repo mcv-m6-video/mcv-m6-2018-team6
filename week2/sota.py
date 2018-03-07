@@ -16,7 +16,6 @@ import os
 from frameworkJFM import MOG as g
 from frameworkJFM import Original as o
 
-
 data_dir = '/media/jfm/Slave/Data/datasets/highway/input'
 gt_dir   = '/media/jfm/Slave/Data/datasets/highway/groundtruth'
 
