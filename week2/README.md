@@ -14,7 +14,7 @@ In this week, our goal is to learn how to model the background video frames:
 task1.1 Gaussian modelling. The dataset will be divided in two, the first half will be used for modelling the background (for
 extracting mean and std) and the second half will be used to segment the foregorund.
 
-  ###Instructions: task1.py | given one of the three datasets it will provide a .gif with the performance and mean and std values plotted.
+  ### Instructions: task1.py | given one of the three datasets it will provide a .gif with the performance and mean and std values plotted.
 
 task1.2 F1_score vs alpha. When modelling the background, it is needed to choose an alpha as setting a threshold for the
 permisivity of the algorithm to classify one pixel as a background or foreground. A plot of F1 vs alpha will help to see and 
@@ -43,7 +43,7 @@ task3 Comparison of the Single Gaussian developed versus the BackgroundSubstract
 ## Task 4: Color sequences
 task4 Update of the task 1 with an implementation to support color sequences:
 
-1.rgb:Red Green Blue channels.
+case1.rgb:Red Green Blue channels.
 
   instructions: mainV3.py | given a datast and RGB chosen, it provides the F1 values vs Alpha to see which is the largest F1-scor (prediction of the foreground).
   
