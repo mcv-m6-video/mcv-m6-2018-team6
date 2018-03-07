@@ -271,7 +271,7 @@ class MOG(gaussian1D):
                 image = cv2.imread(im_dir,-1)
                 print "Opening background"
                 cv2.backgroundSubtractor.apply(image, learningRate=0.5)
-        def get_motion(self,image,th):
+        def get_motion(self,image,th=0.5):
             print "Opening background", image
             foreground = cv2.backgroundSubtractor.apply(image, learningRate=0)
             foreground =np.asarray(foreground)
@@ -292,10 +292,7 @@ class adaptative(gaussian1D):
                 diff = np.abs(self.mean-im)
                 foreground = (diff >= th[1]*(self.std+2))
                 index_rep(self.mean,th[0]*im+(1-th[0])*self.mean,foreground == False)
-                #self.mean[foreground==False] = th[0]*im[foreground==False]+(1-th[0])*self.mean
-                index_rep(self.std,np.sqrt(th[0])*(im-self.mean)+np.sqrt(1-th[0]*self.std),foreground == False)
-#                self.std[foreground == False] = np.sqrt(th)*(im[foreground == False]-
-#                self.mean[foreground == False])+np.sqrt(1-th[0])*self.std[foreground == False]
+                index_rep(self.std,np.sqrt(th[0]*np.multiply((im-self.mean),(im-self.mean))+(1-th[0])*np.multiply(self.std,self.std)),foreground == False)
                 foreground = foreground.astype(int)
                 return foreground
         def allvsalpha(self,frame_list,gt_list,alpha,beta):
@@ -309,7 +306,7 @@ class adaptative(gaussian1D):
             for i in alpha:
                 i_b = 0
                 for j in beta:
-                    precision, recall, F1 = self.evaluateSeveralFrames(frame_list,gt_list,[i,j])
+                    precision, recall, F1 = self.evaluateSeveralFrames(frame_list,gt_list,[j,i])
                     self.F1_vector[i_a,i_b] = F1
                     self.precision_vector[i_a,i_b] = precision
                     self.recall_vector[i_a,i_b] = recall

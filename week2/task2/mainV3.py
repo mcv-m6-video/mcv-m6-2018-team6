@@ -87,23 +87,23 @@ print '......................................'
 data_dir = '/media/jfm/Slave/Data/datasets/fall/input'
 gt_dir   = '/media/jfm/Slave/Data/datasets/fall/groundtruth'
 ####Creating a list of frame names to perform a background model
-#frames_train = []
-#gt_train = []
-#
-#frames_test = []
-#gt_test = []
-#
-#print 'Reading background modeling files:...'
-#for i in range(1460,1511):
-#    frames_train.append('in00'+str(i)+'.jpg')
-#    gt_train.append('gt00'+str(i)+'.png')
-#    print 'in00'+str(i)+'.jpg loaded'
-#for i in range(1511,1561):
-#    frames_test.append('in00'+str(i)+'.jpg')
-#    gt_test.append('gt00'+str(i)+'.png')
-#    print 'in00'+str(i)+'.jpg loaded'
-#print 'Done!'
-#
+frames_train = []
+gt_train = []
+
+frames_test = []
+gt_test = []
+
+print 'Reading background modeling files:...'
+for i in range(1460,1511):
+    frames_train.append('in00'+str(i)+'.jpg')
+    gt_train.append('gt00'+str(i)+'.png')
+    print 'in00'+str(i)+'.jpg loaded'
+for i in range(1511,1561):
+    frames_test.append('in00'+str(i)+'.jpg')
+    gt_test.append('gt00'+str(i)+'.png')
+    print 'in00'+str(i)+'.jpg loaded'
+print 'Done!'
+
 ####Defining an instance for fall dataset
 #
 fall = g('fall_ad',data_dir,gt_dir,'gray')
@@ -115,9 +115,9 @@ fall.get_1D(frames_train)
 #fall.PlotMeanStd()
 #plt.close()
 #### Computing metric vs alpha
-#fall.allvsalpha(frames_test,gt_test,np.arange(0,6,1),np.arange(0,1,0.2))
-#fall.saveAllvsalpha()
-fall.LoadAllvsalpha()
+fall.allvsalpha(frames_test,gt_test,np.arange(0,6,1),np.arange(0,1,0.2))
+fall.saveAllvsalpha()
+#fall.LoadAllvsalpha()
 print 'Reading to-motion-estimate files:...'
 results_list_dir = []
 for i in range(1511,1561):
@@ -133,7 +133,7 @@ for i in range(1511,1561):
     results_list_dir.append('results_fall/00'+str(i)+'.png')
 
 ### Creating gif of RGB images + FP + FN
-#fall.errorPainting(frames_test,gt_test,results_list_dir)
+fall.errorPainting(frames_test,gt_test,results_list_dir)
 
 ### Creating a gif of motion estimation results
 animar = o('fall_gif_gray','results_fall',gt_dir)
@@ -221,21 +221,21 @@ plt.show()
 #### ===========================================================================
 #### ===========================================================================
 
-plt.plot(highway.x,highway.F1_vector,label='highway frames 1201-1350')
-plt.plot(fall.x,fall.F1_vector,label='fall frames 1511-1560')
-plt.plot(traffic.x,traffic.F1_vector,label='c jittering frames 1001-1051')
-plt.xlabel('alpha')
-plt.ylabel('F1 score')
-plt.title('F1 score vs alpha')
-plt.legend()
-plt.savefig('F1vsalpha_gray_highway.png')
-plt.close()
-
-plt.plot(highway.recall_vector,highway.precision_vector,label='highway frames 1201-1350')
-plt.plot(fall.recall_vector,fall.precision_vector,label='fall frames 1511-1560')
-plt.plot(traffic.recall_vector,traffic.precision_vector,label='c jittering frames 1001-1051')
-plt.xlabel('Recall')
-plt.ylabel('Precision')
-plt.title('Precision - Recall curve')
-plt.legend()
-plt.savefig('PR_gray_highway.png')
+#plt.plot(highway.x,highway.F1_vector,label='highway frames 1201-1350')
+#plt.plot(fall.x,fall.F1_vector,label='fall frames 1511-1560')
+#plt.plot(traffic.x,traffic.F1_vector,label='c jittering frames 1001-1051')
+#plt.xlabel('alpha')
+#plt.ylabel('F1 score')
+#plt.title('F1 score vs alpha')
+#plt.legend()
+#plt.savefig('F1vsalpha_gray_highway.png')
+#plt.close()
+#
+#plt.plot(highway.recall_vector,highway.precision_vector,label='highway frames 1201-1350')
+#plt.plot(fall.recall_vector,fall.precision_vector,label='fall frames 1511-1560')
+#plt.plot(traffic.recall_vector,traffic.precision_vector,label='c jittering frames 1001-1051')
+#plt.xlabel('Recall')
+#plt.ylabel('Precision')
+#plt.title('Precision - Recall curve')
+#plt.legend()
+#plt.savefig('PR_gray_highway.png')

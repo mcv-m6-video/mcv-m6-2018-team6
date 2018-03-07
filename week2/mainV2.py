@@ -13,8 +13,8 @@
 ##MASTER IN COMPUTER VISION
 ##Computer Vision Center Barcelona
 
-from frameworkJFM import gaussian1D as g
-from frameworkJFM import Original as o
+from frameworkJFMV2 import gaussian1D as g
+from frameworkJFMV2 import Original as o
 import cv2
 import os
 import numpy as np
@@ -25,8 +25,8 @@ print '......................................'
 print '......................................'
 
 
-data_dir = '/media/jfm/Slave/Data/datasets/highway/input'
-gt_dir   = '/media/jfm/Slave/Data/datasets/highway/groundtruth'
+#data_dir = '/media/jfm/Slave/Data/datasets/highway/input'
+#gt_dir   = '/media/jfm/Slave/Data/datasets/highway/groundtruth'
 ####Creating a list of frame names to perform a background model
 #frames_train = []
 #gt_train = []
@@ -80,11 +80,12 @@ gt_dir   = '/media/jfm/Slave/Data/datasets/highway/groundtruth'
 #for i in range(1201,1351):
 #    res_list.append('00'+str(i)+'.png')
 #animar.animacion(res_list)
+#
 ##### ===========================================================================
 ##### ===========================================================================
 #data_dir = '/media/jfm/Slave/Data/datasets/fall/input'
 #gt_dir   = '/media/jfm/Slave/Data/datasets/fall/groundtruth'
-####Creating a list of frame names to perform a background model
+###Creating a list of frame names to perform a background model
 #frames_train = []
 #gt_train = []
 #
@@ -127,116 +128,7 @@ gt_dir   = '/media/jfm/Slave/Data/datasets/highway/groundtruth'
 #    #Saving results (binary) 1=foreground 0 = background
 #    cv2.imwrite('results_fall_gray/00'+str(i)+'.png',foreground)
 #    results_list_dir.append('results_fall_gray/00'+str(i)+'.png')
-####Creating a list of frame names to perform a background model
-frames_train = []
-gt_train = []
-
-frames_test = []
-gt_test = []
-
-print 'Reading background modeling files:...'
-for i in range(1050,1201):
-    frames_train.append('in00'+str(i)+'.jpg')
-    gt_train.append('gt00'+str(i)+'.png')
-    print 'in00'+str(i)+'.jpg loaded'
-for i in range(1201,1351):
-    frames_test.append('in00'+str(i)+'.jpg')
-    gt_test.append('gt00'+str(i)+'.png')
-    print 'in00'+str(i)+'.jpg loaded'
-print 'Done!'
-
-###Defining an instance for highway dataset
-
-highway = g('highway_gray',data_dir,gt_dir,'gray')
-print 'Instance ' +highway.name +' created'
-
-##Compute background model (gaussian-based)
-highway.get_1D(frames_train)
-##Plot Mean and Std
-highway.PlotMeanStd()
-plt.close()
-### Computing metric vs alpha
-highway.allvsalpha(frames_test,gt_test,np.arange(0,10.25,0.25))
-highway.saveAllvsalpha()
-print 'Reading to-motion-estimate files:...'
-results_list_dir = []
-for i in range(1201,1351):
-    im_dir = os.path.join(data_dir, 'in00'+str(i)+'.jpg')
-    print 'in00'+str(i)+'.jpg ...loaded!'
-    image = cv2.imread(im_dir,-1)
-    #Computing motion based in Gaussian1D
-    foreground = highway.get_motion(image,highway.x[np.argmax(highway.F1_vector)])
-    #Create results folder before running code inside your working folder
-    #Saving results (binary) 1=foreground 0 = background
-    cv2.imwrite('results_highway_gray/00'+str(i)+'.png',foreground)
-    results_list_dir.append('results_highway_gray/00'+str(i)+'.png')
-
-### Creating gif of RGB images + FP + FN
-highway.errorPainting(frames_test,gt_test,results_list_dir)
-
-### Creating a gif of motion estimation results
-animar = o('highway_gif_gray','results_highway_gray',gt_dir)
-res_list = []
-for i in range(1201,1351):
-    res_list.append('00'+str(i)+'.png')
-animar.animacion(res_list)
-#### ===========================================================================
-#### ===========================================================================
-data_dir = '/media/jfm/Slave/Data/datasets/fall/input'
-gt_dir   = '/media/jfm/Slave/Data/datasets/fall/groundtruth'
-###Creating a list of frame names to perform a background model
-frames_train = []
-gt_train = []
-
-frames_test = []
-gt_test = []
-
-print 'Reading background modeling files:...'
-for i in range(1460,1511):
-    frames_train.append('in00'+str(i)+'.jpg')
-    gt_train.append('gt00'+str(i)+'.png')
-    print 'in00'+str(i)+'.jpg loaded'
-for i in range(1511,1561):
-    frames_test.append('in00'+str(i)+'.jpg')
-    gt_test.append('gt00'+str(i)+'.png')
-    print 'in00'+str(i)+'.jpg loaded'
-print 'Done!'
-
-###Defining an instance for fall dataset
-
-fall = g('fall_gray',data_dir,gt_dir,'gray')
-print 'Instance ' +fall.name +' created'
-
-##Compute background model (gaussian-based)
-fall.get_1D(frames_train)
-##Plot Mean and Std
-fall.PlotMeanStd()
-plt.close()
-### Computing metric vs alpha
-fall.allvsalpha(frames_test,gt_test,np.arange(0,10.25,0.25))
-fall.saveAllvsalpha()
-print 'Reading to-motion-estimate files:...'
-results_list_dir = []
-for i in range(1511,1561):
-    im_dir = os.path.join(data_dir, 'in00'+str(i)+'.jpg')
-    print 'in00'+str(i)+'.jpg ...loaded!'
-    image = cv2.imread(im_dir,-1)
-    #Computing motion based in Gaussian1D
-    foreground = fall.get_motion(image,fall.x[np.argmax(fall.F1_vector)])
-    #Create results folder before running code inside your working folder
-    #Saving results (binary) 1=foreground 0 = background
-    cv2.imwrite('results_fall_gray/00'+str(i)+'.png',foreground)
-    results_list_dir.append('results_fall_gray/00'+str(i)+'.png')
-
-### Creating gif of RGB images + FP + FN
-fall.errorPainting(frames_test,gt_test,results_list_dir)
-
-### Creating a gif of motion estimation results
-animar = o('fall_gif_gray','results_fall_gray',gt_dir)
-res_list = []
-for i in range(1511,1561):
-    res_list.append('00'+str(i)+'.png')
-animar.animacion(res_list)
+#
 #### Creating gif of RGB images + FP + FN
 #fall.errorPainting(frames_test,gt_test,results_list_dir)
 #
@@ -246,9 +138,10 @@ animar.animacion(res_list)
 #for i in range(1511,1561):
 #    res_list.append('00'+str(i)+'.png')
 #animar.animacion(res_list)
+#
 
-#### ===========================================================================
-#### ===========================================================================
+##### ===========================================================================
+##### ===========================================================================
 data_dir = '/media/jfm/Slave/Data/datasets/traffic/input'
 gt_dir   = '/media/jfm/Slave/Data/datasets/traffic/groundtruth'
 ###Creating a list of frame names to perform a background model
@@ -277,7 +170,7 @@ print 'Done!'
 
 ###Defining an instance for fall dataset
 
-traffic = g('fall_gray',data_dir,gt_dir,'gray')
+traffic = g('traffic_gray',data_dir,gt_dir,'gray')
 print 'Instance ' +traffic.name +' created'
 
 ##Compute background model (gaussian-based)
@@ -316,7 +209,12 @@ animar.animacion(res_list)
 #### ===========================================================================
 #### ===========================================================================
 #### ===========================================================================
-
+highway = g('highway_gray',data_dir,gt_dir,'gray')
+traffic = g('traffic_gray',data_dir,gt_dir,'gray')
+fall = g('fall_gray',data_dir,gt_dir,'gray')
+highway.LoadAllvsalpha()
+traffic.LoadAllvsalpha()
+fall.LoadAllvsalpha()
 plt.plot(highway.x,highway.F1_vector,label='highway frames 1201-1350')
 plt.plot(fall.x,fall.F1_vector,label='fall frames 1511-1560')
 plt.plot(traffic.x,traffic.F1_vector,label='c jittering frames 1001-1051')

@@ -19,9 +19,10 @@ import matplotlib as mpl
 from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
 import scipy.stats as ndis
 import math
+
 # Input the pair of image and gt, this function will output the TP, FP, TN, FN
 
-
+    
 class Original: 
     def __init__(self,name,im_dir,gt_dir,color='gray'):
         self.color = color
@@ -256,3 +257,19 @@ class gaussian1D(Original):
                 plt.savefig(self.name+'_mean_stdplot'+str(j)+'.png', bbox_inches='tight', pad_inches = 0)
                 plt.close()            
         
+class MOG(gaussian1D):
+        def get_1D(self,frame_list):
+            cv2.backgroundSubtractor = cv2.BackgroundSubtractorMOG(history=100, 
+                        nmixtures=5, backgroundRatio=0.7, noiseSigma=0)
+            for i in sorted(frame_list):
+                im_dir = os.path.join(self.im_dir, i)
+                image = cv2.imread(im_dir,-1)
+                print "Opening background"
+                cv2.backgroundSubtractor.apply(image, learningRate=0.5)
+        def get_motion(self,image,th):
+            print "Opening background", image
+            foreground = cv2.backgroundSubtractor.apply(image, learningRate=0)
+            foreground =np.asarray(foreground)
+            foreground = foreground.astype(bool)
+            foreground = foreground.astype(int)
+            return foreground

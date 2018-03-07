@@ -23,12 +23,13 @@ All the classes have the following attributes:
 name: [str] Brief description up to you. For example dataset name.  
 im_dir: [str] Frame's folder directory  
 gt_dir: [str] Groundtruth's folder directory  
-color: [bool] [default=False] Using greyscale (false) or RGB images (true)  
+color: [str] [default='gray'] Using greyscale 'gray', RGB 'RGB' or HSV 'HSV' colorspace
 
 Methods
 
 * **animacion(frame_list)**
-Creates a .gif file animating given a list of frames stored in im_dir directory
+Creates a .gif file animating given a list of frames stored in im_dir directory.
+![](week2/fall_gif_gray_bueno.gif)  
 * **errorPainting(frame_list,gt_list,results_list_dir)**
 Visualize False Positives and False Negatives for a set a given frames, comparing given results with groundtruth. Red represents False Negative and green represents false positive.
 ![](errorPainting.png)  
@@ -84,5 +85,37 @@ Load textfiles saved with *saveAllvsalpha()* function. Files are supposed to be 
 Visualize mean and std modeled in a single graphic as the following one:  
 +![](example.png)
 
+### MOG
+This class allows to perform a predifined GMM (5 mixtures).  
+* **get_1D(frame_list)**
+Compute gaussian for every pixel in every channel and store them in the mean-std attributes.  
 
+* **get_motion(im,th)**
+*frame_list:* list containing names of each frame which will be used to compute the gaussian background model. These frames
+are supossed to be stored in im_dir folder  
 
+* **evaluateSeveralFrames(frame_list,gt_list)**
+Return precision, recall and F1 values for a set of frames (absolute values, not averaging frames)
+
+*frame_list:* list containing names of each frame which will be used to compute the evaluation. These frames
+are supossed to be stored in im_dir folder.  
+*gt_list:* list containing names of each groundtruth which will be used to compute the evaluation. These gt
+are supossed to be stored in gt_dir folder.  
+
+Note: frames and their related grountruth images MUST share the same position in their respective lists.
+Computes probabilistic motion estimation for a given image (im) using the model saved in the instance.  
+*im:* [cvMat] RGB Image opened with cv2.imread procedure.  
+
+###adaptative
+Only available as grayscale.  
+**All gaussian1D functions available**
+Computes an adaptative model the same way as gaussian1D but updating mean and std.  
++![](example.png)
+* **allvsalpha(frame_list,gt_list,alpha_lindspace,beta_lindspace)**
+Saves precision, recall and F1 vs alpha in class attributes.  
+*frame_list:* list containing names of each frame which will be used to compute the evaluation. These frames
+are supossed to be stored in im_dir folder.  
+*gt_list:* list containing names of each groundtruth which will be used to compute the evaluation. These gt
+are supossed to be stored in gt_dir folder.  
+*alpha_lindspace:* Vector of different alphas to perform allvsalpha  
+*beta_lindspace:* Vector of different betas to perform allvsalpha  
