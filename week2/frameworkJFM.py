@@ -127,8 +127,11 @@ class gaussian1D(Original):
             if self.color=='gray':
                 image = cv2.cvtColor(cv2.imread(im_dir,-1),cv2.COLOR_BGR2GRAY)
                 im_patch.append(image)
-            elif self.color=='RGB' or self.color=='HSV':
+            elif self.color=='RGB':
                 image = cv2.imread(im_dir,-1)
+                im_patch.append(image)
+            elif self.color=='HSV':
+                image = cv2.cvtColor(cv2.imread(im_dir,-1),cv2.COLOR_BGR2HSV)
                 im_patch.append(image)
             
         im_patch = np.asarray(im_patch)
@@ -148,7 +151,6 @@ class gaussian1D(Original):
             foreground = foreground.astype(int)
         elif self.color == 'RGB':
             im = np.asarray(im)
-
             channelR = im[:,:,2] 
             channelG = im[:,:,1]
             channelB = im[:,:,0]
