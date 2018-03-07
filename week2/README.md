@@ -10,11 +10,11 @@ In this week, our goal is to learn how to model the background video frames:
 4. Do it in grayscale images and color images.
 
 
-## task1 Gaussian Distribution  
+## Task 1: Gaussian Distribution  
 task1.1 Gaussian modelling. The dataset will be divided in two, the first half will be used for modelling the background (for
 extracting mean and std) and the second half will be used to segment the foregorund.
 
-  instructions: task1.py | given one of the three datasets it will provide a .gif with the performance and mean and std values plotted.
+  ###Instructions: task1.py | given one of the three datasets it will provide a .gif with the performance and mean and std values plotted.
 
 task1.2 F1_score vs alpha. When modelling the background, it is needed to choose an alpha as setting a threshold for the
 permisivity of the algorithm to classify one pixel as a background or foreground. A plot of F1 vs alpha will help to see and 
@@ -27,7 +27,7 @@ will asses the performance of the background classifier.
 
   instructions: task1.py | given one of the three datasets it will provide a plot Precision-Recall curve and AUC values.
 
-## task2 Adaptive Modelling
+## Task 2: Adaptive Modelling
 task2.1 Adaptive Modelling (Baseline). In this case there is a grid search for the best alpha and rho parameters that
 gives the best F1 value score. The mean and std of the background is first estimated with the half of the frames.
   
@@ -35,12 +35,12 @@ gives the best F1 value score. The mean and std of the background is first estim
   
 task2.2 Comparison adaptive vs non 
 
-## task3 Comparison with state-of-the-art
+## Task 3: Comparison with state-of-the-art
 task3 Comparison of the Single Gaussian developed versus the BackgroundSubstractorMOG from OpenCV (adaptive model)
   
   instructions: sota.py | given a dataset it will provide a .gif with the performance and the F1 score of the MOG technique.  
 
-## task4 Color sequences
+## Task 4: Color sequences
 task4 Update of the task 1 with an implementation to support color sequences:
 
 1.rgb:Red Green Blue channels.
