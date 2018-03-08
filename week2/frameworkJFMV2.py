@@ -193,14 +193,17 @@ class gaussian1D(Original):
             foreground = self.get_motion(image,th)
             gt_dir = os.path.join(self.gt_dir, i)
             gtImage = cv2.imread(gt_dir,0)
-            for ridx in range(gtImage.shape[0]):
-                for cidx in range(gtImage.shape[1]):
-                    if gtImage [ridx,cidx]==255:
-                        trueVector.append(1)
-                        predVector.append(foreground[ridx,cidx])
-                    elif gtImage [ridx,cidx]==0 or gtImage [ridx,cidx]==50:
-                        trueVector.append(0) 
-                        predVector.append(foreground[ridx,cidx])
+            foreground_flat = np.array(foreground).flatten() 
+            gtImage_flat = np.array(gtImage).flatten()
+            i_g=0
+            for i in gtImage_flat:
+                if i==255:
+                    trueVector.append(1)
+                    predVector.append(foreground_flat[i_g])
+                elif i==0 or i==50:
+                    trueVector.append(0)
+                    predVector.append(foreground_flat[i_g])
+                i_g = i_g+1
             n = n+1
         trueArray = np.asarray(trueVector)
         predArray = np.asarray(predVector)        
