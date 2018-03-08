@@ -1,0 +1,12 @@
+main comands
+
+git clone link_repository
+git pull - Download server changes
+
+git status - Check which files are gonna be uploaded to the server
+git add namefile  -  Add a file to the list of file which are gonna be uploaded to the server
+git add .   -  (for adding all the files)
+git commit  Txtfile which describes which changes are you gonna upload 
+git push   - Upload files to repository
+In github there is a list of files which are gonna be uploaded to repository called stack in index
+To upload a file you have to add this file to this list (git add command)
