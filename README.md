@@ -118,4 +118,4 @@ are supossed to be stored in im_dir folder.
 *gt_list:* list containing names of each groundtruth which will be used to compute the evaluation. These gt
 are supossed to be stored in gt_dir folder.  
 *alpha_lindspace:* Vector of different alphas to perform allvsalpha  
-*beta_lindspace:* Vector of different betas to perform allvsalpha  
+*beta_lindspace:* Vector of different betas to perform allvsalpha . 
