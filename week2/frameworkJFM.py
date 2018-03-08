@@ -48,39 +48,35 @@ class Original:
     def evaluateOneFrame(frame,gt):
         predVector = []
         trueVector = []
-        for ridx in range(frame.shape[0]):
-            for cidx in range(frame.shape[1]):
-                predVector.append(frame[ridx,cidx])
-        for ridx in range(gt.shape[0]):
-            for cidx in range(gt.shape[1]):
-                trueVector.append(gt[ridx,cidx])
-        trueArray = np.asarray(trueVector)
-        predArray = np.asarray(predVector)     
-        for i in range(len(trueArray)):
-            if trueArray[i] == 255:
-                trueArray[i] = 1
+        frame_flat = np.array(frame).flatten()
+        gt_flat = np.array(gt).flatten()
+        i_g=0
+        for i in gt_flat:
+            if i==255 or i==170:
+                trueVector.append(1)
+                predVector.append(frame_flat[i_g])
             else:
-                trueArray[i] = 0
+                trueVector.append(0)
+                predVector.append(frame_flat[i_g])
+            i_g = i_g+1
+            
+        trueArray = np.asarray(trueVector)
+        predArray = np.asarray(predVector)
         _, _,f1_score_one,_ = PRFmetrics(trueArray, predArray, average='binary')  
         TP=0
         TN=0
         FP=0
         FN=0
-        # for the gt, we only consider two classes(0,255) represent background and motion respectively.
-        for j in range(len(trueArray)):
-            # True Positive (TP): we predict a label of 255 is positive, and the gt is 255.
-            if trueArray[j] == predArray[j] == 1:
-                TP = TP+1
-            # True Negative (TN): we predict a label of 0 is negative, and the gt is 0.
-            if trueArray[j] == predArray[j] == 0:
-                TN = TN+1
-            # False Positive (FP): we predict a label of 255 is positive, but the gt is 0.
-            if trueArray[j] ==0 and predArray[j] == 1:
-                FP = FP+1
-            # False Negative (FN): we predict a label of 0 is negative, but the gt is 255.
-            if trueArray[j] == 1 and predArray[j] == 0:
-                FN = FN+1      
-        return TP, FN, f1_score_one        
+        # True Positive (TP): we predict a label of 1 (positive), and the true label is 1.
+        TP = np.sum(np.logical_and(predArray == 1, trueArray == 1))
+        # True Negative (TN): we predict a label of 0 (negative), and the true label is 0.
+        TN = np.sum(np.logical_and(predArray == 0, trueArray == 0))
+        # False Positive (FP): we predict a label of 1 (positive), but the true label is 0.
+        FP = np.sum(np.logical_and(predArray == 1, trueArray == 0))
+        # False Negative (FN): we predict a label of 0 (negative), but the true label is 1.
+        FN = np.sum(np.logical_and(predArray == 0, trueArray == 1))
+        # for the gt, we only consider two classes(0,255) represent background and motion respectively.    
+        return TP, FN, f1_score_one             
 
     def errorPainting(self,frame_list,gt_list,results_list_dir):
         for i in range(len(frame_list)):
