@@ -1,0 +1,5 @@
+main comands
+
+git pull Download server changes
+
+git status Check which files are gonna be uploadedto the server
