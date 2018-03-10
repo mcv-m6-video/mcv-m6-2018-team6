@@ -17,8 +17,11 @@ import matplotlib.image as mgimg
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from sklearn.metrics import precision_recall_fscore_support as PRFmetrics
+from sklearn.metrics import precision_recall_curve
 import scipy.stats as ndis
 import math
+from skimage import morphology
+from sklearn.metrics import auc
 
 # Input the pair of image and gt, this function will output the TP, FP, TN, FN
 
@@ -45,6 +48,7 @@ class Original:
                                         repeat_delay=1000)      
         ani.save(self.name+'.gif')
         plt.close()
+    
     def evaluateOneFrame(frame,gt):
         predVector = []
         trueVector = []
@@ -62,7 +66,9 @@ class Original:
             
         trueArray = np.asarray(trueVector)
         predArray = np.asarray(predVector)
-        _, _,f1_score_one,_ = PRFmetrics(trueArray, predArray, average='binary')  
+        _, _,f1_score,_ = PRFmetrics(trueArray, predArray,average='binary')
+        precision, recall,_ = precision_recall_curve(trueArray, predArray, average='binary')
+        AUC= auc(recall, precision)
         TP=0
         TN=0
         FP=0
@@ -76,7 +82,7 @@ class Original:
         # False Negative (FN): we predict a label of 0 (negative), but the true label is 1.
         FN = np.sum(np.logical_and(predArray == 0, trueArray == 1))
         # for the gt, we only consider two classes(0,255) represent background and motion respectively.    
-        return TP, FN, f1_score_one             
+        return precision, recall, f1_score, AUC                    
 
     def errorPainting(self,frame_list,gt_list,results_list_dir):
         for i in range(len(frame_list)):
@@ -202,6 +208,30 @@ class gaussian1D(Original):
         predArray = np.asarray(predVector)        
         precision, recall,f1_score,support = PRFmetrics(trueArray, predArray,average='binary')
         return precision, recall, f1_score
+    
+    
+    def AUCvsP(self,frames_list,gt_list, th, P_range):
+        AUC_list = []
+        for P in P_range:
+            print "Filtering objects smaller than " + str(P)
+            n=0
+            AUC_p = []
+            for i in sorted(gt_list):
+                im_dir = os.path.join(self.im_dir, frame_list[n])
+                image = cv2.imread(im_dir,-1)
+                foreground = self.get_motion(image,th)
+                gt_dir = os.path.join(self.gt_dir, i)
+                gtImage = cv2.imread(gt_dir,0)
+                AFimage = morphology.remove_small_objects(foreground.astype(bool), min_size=P)
+                AFimage = AFimage.astype(int)
+                _, _, _, PRauc_perImg = evaluateOneFrame(AFimage, gtImage)
+                AUC_p.append(PRauc_perImg)
+                n=n+1
+            AUC_Array = np.asarray(AUC_p)
+            mean_AUC=np.mean(AUC_Array)
+            AUC_list.append(mean_AUC)
+        AUC_allP=np.asarray(AUC_list)
+        return AUC_allP
     
 
     def allvsalpha(self,frame_list,gt_list,th_vector):
