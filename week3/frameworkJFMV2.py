@@ -77,15 +77,15 @@ class Original:
         TN=0
         FP=0
         FN=0
-        # True Positive (TP): we predict a label of 1 (positive), and the true label is 1.
-        TP = np.sum(np.logical_and(predArray == 1, trueArray == 1))
-        # True Negative (TN): we predict a label of 0 (negative), and the true label is 0.
-        TN = np.sum(np.logical_and(predArray == 0, trueArray == 0))
-        # False Positive (FP): we predict a label of 1 (positive), but the true label is 0.
-        FP = np.sum(np.logical_and(predArray == 1, trueArray == 0))
-        # False Negative (FN): we predict a label of 0 (negative), but the true label is 1.
-        FN = np.sum(np.logical_and(predArray == 0, trueArray == 1))
-        # for the gt, we only consider two classes(0,255) represent background and motion respectively.    
+#        # True Positive (TP): we predict a label of 1 (positive), and the true label is 1.
+#        TP = np.sum(np.logical_and(predArray == 1, trueArray == 1))
+#        # True Negative (TN): we predict a label of 0 (negative), and the true label is 0.
+#        TN = np.sum(np.logical_and(predArray == 0, trueArray == 0))
+#        # False Positive (FP): we predict a label of 1 (positive), but the true label is 0.
+#        FP = np.sum(np.logical_and(predArray == 1, trueArray == 0))
+#        # False Negative (FN): we predict a label of 0 (negative), but the true label is 1.
+#        FN = np.sum(np.logical_and(predArray == 0, trueArray == 1))
+#        # for the gt, we only consider two classes(0,255) represent background and motion respectively.    
         return precision, recall, f1_score, AUC                 
 
     def errorPainting(self,frame_list,gt_list,results_list_dir):
@@ -185,9 +185,9 @@ class gaussian1D(Original):
         return foreground
 
     def evaluateSeveralFrames(self,frame_list,gt_list,th):
-        predVector = []
-        trueVector = []
-        n = 0 
+        trueArray = []
+        predArray = []
+        n=0
         for i in sorted(gt_list):
             im_dir = os.path.join(self.im_dir, frame_list[n])
             image = cv2.imread(im_dir,-1)
@@ -196,18 +196,19 @@ class gaussian1D(Original):
             gtImage = cv2.imread(gt_dir,0)
             foreground_flat = np.array(foreground).flatten() 
             gtImage_flat = np.array(gtImage).flatten()
-            i_g=0
-            for i in gtImage_flat:
-                if i==255:
-                    trueVector.append(1)
-                    predVector.append(foreground_flat[i_g])
-                elif i==0 or i==50:
-                    trueVector.append(0)
-                    predVector.append(foreground_flat[i_g])
-                i_g = i_g+1
-            n = n+1
-        trueArray = np.asarray(trueVector)
-        predArray = np.asarray(predVector)        
+            motionVector = gtImage_flat == 255
+            bgVector = gtImage_flat ==0 | gtImage_flat == 50
+            trueVector_fg = foreground_flat[motionVector==True]
+            trueVector_fg = trueVector_fg.astype(int)
+            trueVector_bg = foreground_flat[bgVector==True]
+            trueVector_bg = trueVector_bg.astype(int)
+            motionVector = motionVector.astype(int)
+            bgVector = bgVector.astype(int)
+            trueVector=np.append(trueVector_fg,trueVector_bg)
+            predVector =np.append(motionVector,bgVector)
+            trueArray = np.append(trueArray,trueVector)
+            predVector = np.append(predArray,predVector)
+            n=n+1
         precision, recall,f1_score,support = PRFmetrics(trueArray, predArray,average='binary')
         return precision, recall, f1_score
     
@@ -218,14 +219,14 @@ class gaussian1D(Original):
             n=0
             AUC_p = []
             for i in sorted(gt_list):
-                im_dir = os.path.join(self.im_dir, frame_list[n])
+                im_dir = os.path.join(self.im_dir, frames_list[n])
                 image = cv2.imread(im_dir,-1)
                 foreground = self.get_motion(image,th)
                 gt_dir = os.path.join(self.gt_dir, i)
                 gtImage = cv2.imread(gt_dir,0)
                 AFimage = morphology.remove_small_objects(foreground.astype(bool), min_size=P)
                 AFimage = AFimage.astype(int)
-                _, _, _, PRauc_perImg = evaluateOneFrame(AFimage, gtImage)
+                _, _, _, PRauc_perImg = self.evaluateOneFrame(AFimage, gtImage)
                 AUC_p.append(PRauc_perImg)
                 n=n+1
             AUC_Array = np.asarray(AUC_p)
