@@ -18,7 +18,7 @@ In this week, our goal is to learn how to :
 ## Task 2: Area filtering
 - Task2.1: AUC vs #pixels: Plot the AUC vs the number of pixels of are filtering.
 
-  Instructions:  
+  Instructions:  later will be uploaded 
   
 - Task2.2: Argument max of AUC depending on the P, to find the highest mean of AUC for each sequence.
 
@@ -29,4 +29,15 @@ In this week, our goal is to learn how to :
 
   Instructions:  task3.py  | given a foreground it applies the morph operation desired with the desired structuring element.  
 
+
+## Task 4: Shadow removal
+- Task4: try to remove shadows based on the previos methods for foreground detection.
+
+Instructions: main.py
+
+
+## Task 5: Comparison PR curve (AUC)
+- Task5: A comparison between the  previous (week2) and the model after morphological filtering has been applied. 
+
+Instructions: we run the task3.py and the task 1 from last week and plot them together.
 
