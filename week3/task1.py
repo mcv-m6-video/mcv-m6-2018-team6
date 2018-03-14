@@ -176,10 +176,10 @@ print 'Instance ' +traffic.name +' created'
 ##Compute background model (gaussian-based)
 traffic.get_1D(frames_train)
 ##Plot Mean and Std
-traffic.PlotMeanStd()
-plt.close()
+#traffic.PlotMeanStd()
+#plt.close()
 ### Computing metric vs alpha
-traffic.allvsalpha(frames_test,gt_test,np.arange(0,10.25,0.25))
+traffic.allvsalpha(traffic.frames_test,traffic.gt_test,np.arange(0,10.25,0.25))
 traffic.saveAllvsalpha()
 print 'Reading to-motion-estimate files:...'
 results_list_dir = []
@@ -195,7 +195,7 @@ for i in range(1001,1051):
     results_list_dir.append('results_traffic_gray/00'+str(i)+'.png')
 
 ### Creating gif of RGB images + FP + FN
-traffic.errorPainting(frames_test,gt_test,results_list_dir)
+traffic.errorPainting(traffic.frames_test,traffic.gt_test,results_list_dir)
 
 ### Creating a gif of motion estimation results
 animar = o('traffic_gif_gray','results_traffic_gray',gt_dir)
