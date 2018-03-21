@@ -218,7 +218,7 @@ class gaussian1D(Original):
             n=0
             AUC_p = []
             for i in sorted(gt_list):
-                im_dir = os.path.join(self.im_dir, frame_list[n])
+                im_dir = os.path.join(self.im_dir, frames_list[n])
                 image = cv2.imread(im_dir,-1)
                 foreground = self.get_motion(image,th)
                 gt_dir = os.path.join(self.gt_dir, i)
