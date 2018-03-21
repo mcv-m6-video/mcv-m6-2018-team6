@@ -8,7 +8,7 @@ In this week, our goal is to learn how to :
 1. Estimate the optical flow of a video sequence.  
 2. Use the optical flow to stabilize any potential camera jitter.  
 
-## Task 1: 
+## Task 1: Optical flow  
 - Task 1.1: Optical flow with Block Matching  
 
    Instructions:  task1.py  
