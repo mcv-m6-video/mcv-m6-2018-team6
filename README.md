@@ -11,9 +11,9 @@ Yi Xiao(yi.xiao@e-campus.uab.cat)
 
 ## Resources  
 
-[-] [Project slides](https://docs.google.com/presentation/d/1cTuS8FWgHuhoUesjBXL4naTedBy3lkAg0gWeuaF_pgo/edit?usp=sharing)  
-[-] [Project codes](https://github.com/mcv-m6-video/mcv-m6-2018-team6)  
-[-] [Project Paper]()  
+*[Project slides](https://docs.google.com/presentation/d/1cTuS8FWgHuhoUesjBXL4naTedBy3lkAg0gWeuaF_pgo/edit?usp=sharing)  
+*[Project codes](https://github.com/mcv-m6-video/mcv-m6-2018-team6)  
+*[Project Paper]()  
 
 
 ## Motivation   
@@ -21,9 +21,9 @@ The goal of this 5-week project is to learn the basic concepts and techniques re
 
 ## Vehicle Tracking  
 
-[-] Kalman filter   
+*Kalman filter   
 
-[-] Deep Learning (RNN YOLO v2)  
+*Deep Learning (RNN YOLO v2)  
 
 
 ## Speed Estimation  
