@@ -17,11 +17,14 @@ Yi Xiao(yi.xiao@e-campus.uab.cat)
 
 
 ## Motivation   
-The goal of this 5-week project is to learn the basic concepts and techniques related to video sequences processing, mainly for surveillance applications. We have proposed a video surveillance system which is able to track vehicles passing by the road and predict their speeds. In addition, we extended our system as a Collision Detector for a better usage in Traffic System.  
+The goal of this 5-week project is to learn the basic concepts and techniques related to video sequences processing, mainly for surveillance applications. Traffic accident is one of the common cause of death in the world, an effective survillance is necessary in traffic. Computer Vision can be a very useful and affordable way in this field which can assist to improve the traffic safety. We have proposed a video surveillance system which is able to track vehicles passing by the road and predict their speeds. In addition, we extended our system as a Collision Detector for a better usage in Traffic System.  
 
 ## Vehicle Tracking  
 
 * Kalman filter   
+Kalman filter is an optimal method in case of a linear dynamic model with Gaussian noise. Having uncertain information about the object in one frame, we can make an educated guess about where this object will go to next.  
+
++![](kalmanFilter.gif)   
 
 * Deep Learning (RNN YOLO v2)  
 
