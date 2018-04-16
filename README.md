@@ -52,16 +52,15 @@ The result of Kalman Filter tracking was not as good as we expected, since the o
 Once the velocity of a car can be determined by means of computer vision techniques, we implement our own case study focused on evaluating the risk of collision from 2 different cars on the road, one in front the other. 
 For computing the stopping distance of a car it is based on a study where it is introduced that: stopping distance = reaction distance + breaking distance. While the reaction distance can be approximate as a 0.5 times the current velocity at x time, the breaking distance can be approximated using the Newton's laws of motion, where the cinematic energy that the car has is going to be transformed to the friction between the tires and the road.
 
-![](image1.jpg)
 <img src="image1.jpg" height="250">
 
 Once the stopping distance is known, it is necessary to set which of the cars from the scene are going to be evaluated in function of their position and driving lane. For doing so, it is proposed a method to know when two cars are one in front of the other based on the parallelism between the lines that connect each pair of cars and the contour lines of the road.
 
-![](image2.JPG)
+<img src="image2.JPG" height="250">
 
 Following what before mentioned, plotting the lines between cars such as the orange ones(1 and 2) in the previous figure, those can be studied by computing the angle between 1 and 3, 1 and 4, 2 and 3, and 2 and 4. After this, if some of the combinations have an angle below than a given threshold (similar to 30) those lines are parallel and the stopping distance is evaluated. From the figure, this would be extrapolated to evaluate the case of the line '1' due is the only orange line parallel to some of the blue lines, the 1 parallel with the 3.
 
-![](image3.JPG)
+<img src="image3.JPG" height="250">
 
 Once the two cars are selected it is studied if the distance between these two cars is shorter than the stopping distance and it is plotted a color line between these 2 cars with the legend of green, orange and red corresponding to the degree of danger. As shown in the following figure, the distance between the two co-linear cars is safe (larger than the stopping distance) and therefore a green line is plotted between these two cars.
 
