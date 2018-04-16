@@ -7,7 +7,7 @@ Juan Felipe Montesinos(jfmontgar@gmail.com)
 Ferran Carrasquer(ferrancarrasquer@gmail.com)  
 Yi Xiao(yi.xiao@e-campus.uab.cat)  
 
-+![](header.png)
+![](header.png)
 
 ## Resources  
 
@@ -22,9 +22,25 @@ The goal of this 5-week project is to learn the basic concepts and techniques re
 ## Vehicle Tracking  
 
 * Kalman filter   
-Kalman filter is an optimal method in case of a linear dynamic model with Gaussian noise. Having uncertain information about the object in one frame, we can make an educated guess about where this object will go to next.  
 
-+![](kalmanFilter.gif)   
+Kalman filter is an optimal method in case of a linear dynamic model with gaussian noise. Having any uncertain information about a dynamic system, an educated guess about what the system is going to do next can be made. It has many uses, including applications in control, navigation, computer vision, and time series econometrics.  
+
+Since Kalman Filter should be implemented after object detection, background subtraction has been performed firstly. A function from OpenCV which is based on gaussian mixture algorithm can be used. It selects the appropriate number of gaussian distribution for each pixel, and provides good adaptability to varying scenes due illumination changes. You can see an example of the result frame after background subtraction as below:  
+
+![](bgst.png)   
+
+After background subtraction, the main idea next is to find out the centroids of the objects which indicate the positions of the cars, and take them as the input of the kalman filter. For each frame, the steps can be summarized as below:  
+
+* Detect tracks and obtain centroids and bounding box;  
+* Create tracks and assign track ID;  
+* Calculate cost between track prediction and detection;  
+* Use Hungarian Algorithm determine and assign every detected cars to correct track ID;  
+* Maintain tracks and handle unassigned track predictions and detections;  
+* Apply Kalman Filter to predict and update tracks.  
+ 
+![](kalmanFilter.gif)   
+
+The result of Kalman Filter tracking was not as good as we expected, since the object detection and foreground segmentation were not good enough, resulting in a bad tracking. The tracker did not stay for many frames and the Object detection was not stable. With this thinking, a new approach based on Deep Learning has been tried in next section to perform a better object detection for cars tracking.  
 
 * Deep Learning (RNN YOLO v2)  
 
