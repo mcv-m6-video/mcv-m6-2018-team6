@@ -1,5 +1,5 @@
 # Video Surveillance for Road Traffic Monitoring
-Master in Computer Vision - M6 Visual Analysis
+Master in Computer Vision - M6 Video Analysis
 
 ## Group 06
 Name: Group 06 
