@@ -13,7 +13,7 @@ Yi Xiao(yi.xiao@e-campus.uab.cat)
 
 * [Project slides](https://docs.google.com/presentation/d/1cTuS8FWgHuhoUesjBXL4naTedBy3lkAg0gWeuaF_pgo/edit?usp=sharing)  
 * [Project codes](https://github.com/mcv-m6-video/mcv-m6-2018-team6)  
-* [Project Paper](https://www.overleaf.com/read/vhdmzkhyfzkb)  
+* [Project Paper](https://github.com/mcv-m6-video/mcv-m6-2018-team6/blob/master/m6-final-report.pdf)  
 
 
 ## Motivation   
