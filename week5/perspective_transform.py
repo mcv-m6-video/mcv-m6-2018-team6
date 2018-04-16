@@ -12,7 +12,7 @@ import cv2
 
 # load the notecard code image, clone it, and initialize the 4 points
 # that correspond to the 4 corners of the notecard
-frame = cv2.imread("/home/yixiao/Documents/M6_project/week5/images/in000091.jpg")
+frame = cv2.imread("original_trafficUAB/in000091.jpg")
 clone = frame
 
 # pts are the location of 4 points of the bounding box
@@ -29,4 +29,5 @@ warped, M = perspective.four_point_transform(frame, pts)
 # show the original and warped images
 cv2.imshow("Original", clone)
 cv2.imshow("Warped", warped)
+cv2.imwrite('warped.png',warped)
 cv2.waitKey(0)
