@@ -60,7 +60,7 @@ Once the stopping distance is known, it is necessary to set which of the cars fr
 
 Following what before mentioned, plotting the lines between cars such as the orange ones(1 and 2) in the previous figure, those can be studied by computing the angle between 1 and 3, 1 and 4, 2 and 3, and 2 and 4. After this, if some of the combinations have an angle below than a given threshold (similar to 30) those lines are parallel and the stopping distance is evaluated. From the figure, this would be extrapolated to evaluate the case of the line '1' due is the only orange line parallel to some of the blue lines, the 1 parallel with the 3.
 
-![](image 3.JPG)
+![](image3.JPG)
 
 Once the two cars are selected it is studied if the distance between these two cars is shorter than the stopping distance and it is plotted a color line between these 2 cars with the legend of green, orange and red corresponding to the degree of danger. As shown in the following figure, the distance between the two co-linear cars is safe (larger than the stopping distance) and therefore a green line is plotted between these two cars.
 
