@@ -7,7 +7,7 @@ Juan Felipe Montesinos(jfmontgar@gmail.com)
 Ferran Carrasquer(ferrancarrasquer@gmail.com)  
 Yi Xiao(yi.xiao@e-campus.uab.cat)  
 
-![](header.png)
+%![](header.png)
 
 ## Resources  
 
@@ -50,5 +50,17 @@ The result of Kalman Filter tracking was not as good as we expected, since the o
 
 ## Collision Detector
 
+Once the velocity of a car can be determined by means of computer vision techniques, we implement our own case study focused on evaluating the risk of collision from 2 different cars on the road, one in front the other. 
+For computing the stopping distance of a car it is based on a study where it is introduced that: stopping distance = reaction distance + breaking distance. While the reaction distance can be approximate as a 0.5 times the current velocity at x time, the breaking distance can be approximated using the Newton's laws of motion, where the cinematic energy that the car has is going to be transformed to the friction between the tires and the road.
+![](kalmanFilter.gif)
+Once the stopping distance is known, it is necessary to set which of the cars from the scene are going to be evaluated in function of their position and driving lane. For doing so, it is proposed a method to know when two cars are one in front of the other based on the parallelism between the lines that connect each pair of cars and the contour lines of the road.
+![](kalmanFilter.gif)
+Following what before mentioned, plotting the lines between cars such as the orange ones(1 and 2) in the previous figure, those can be studied by computing the angle between 1 and 3, 1 and 4, 2 and 3, and 2 and 4. After this, if some of the combinations have an angle below than a given threshold (similar to 30) those lines are parallel and the stopping distance is evaluated. From the figure, this would be extrapolated to evaluate the case of the line '1' due is the only orange line parallel to some of the blue lines, the 1 parallel with the 3.
+![](kalmanFilter.gif)
+Once the two cars are selected it is studied if the distance between these two cars is shorter than the stopping distance and it is plotted a color line between these 2 cars with the legend of green, orange and red corresponding to the degree of danger. As shown in the following figure, the distance between the two co-linear cars is safe (larger than the stopping distance) and therefore a green line is plotted between these two cars.
 
+## Conclusions and Future Work
 
+In this paper it has been introduced a road traffic monitoring system capable of computing the speed of the cars from a fixed camera and evaluated the risk of collision between two co-linear cars on the road lane. A first approach was based on kalman filter after the foreground segmentation was done. To make the system more robust we proposed a method based on detecting the cars with a pre-trained Neural Network over the frames. Furthermore, a collision detector was performed in order to asses when the distance between two cars was smaller than the stopping distance and therefore there was a high risk of collision if the car in front stops suddenly.
+
+On the other hand, there are some parts of the system that could be improved in the future to make the system more robust. The first one is to train a Neural Network taking into account the time dimension of each car detected, another improvement could be related to computing the velocity of the cars since when doing the projective rectification the results of 2 different cars with the same GT velocity can differ depending on the shape of those. Finally it could be improved the decision of the cars to study for the risk of collision detecting each line road over the video based on the white lines of the road.
