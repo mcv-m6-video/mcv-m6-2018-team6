@@ -52,7 +52,7 @@ The result of Kalman Filter tracking was not as good as we expected, since the o
 Once the velocity of a car can be determined by means of computer vision techniques, we implement our own case study focused on evaluating the risk of collision from 2 different cars on the road, one in front the other. 
 For computing the stopping distance of a car it is based on a study where it is introduced that: stopping distance = reaction distance + breaking distance. While the reaction distance can be approximate as a 0.5 times the current velocity at x time, the breaking distance can be approximated using the Newton's laws of motion, where the cinematic energy that the car has is going to be transformed to the friction between the tires and the road.
 
-![](image1.jpg =250x250)
+![](image1.jpg){:height="50%" width="50%"}
 
 Once the stopping distance is known, it is necessary to set which of the cars from the scene are going to be evaluated in function of their position and driving lane. For doing so, it is proposed a method to know when two cars are one in front of the other based on the parallelism between the lines that connect each pair of cars and the contour lines of the road.
 
